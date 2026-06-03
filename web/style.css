@@ -1,0 +1,22 @@
+:root {
+  --system: #f5a623;  /* amber */
+  --user: #4a90e2;    /* blue */
+  --assistant: #3fae5a;/* green */
+  --tool: #9b59b6;    /* purple */
+  --bg: #14161a; --fg: #e8e8e8; --panel: #1d2026;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: ui-monospace, monospace; background: var(--bg); color: var(--fg); }
+.panels { display: grid; grid-template-columns: 1fr 1.1fr 1.2fr; gap: 1px; height: 100vh; }
+.panel { background: var(--panel); padding: 1rem; overflow: auto; }
+h2 { font-size: .8rem; text-transform: uppercase; letter-spacing: .1em; opacity: .7; }
+#composer { display: flex; gap: .5rem; }
+#message { flex: 1; padding: .5rem; background: #0d0f12; color: var(--fg); border: 1px solid #333; }
+button { padding: .5rem 1rem; background: var(--user); color: #fff; border: 0; cursor: pointer; }
+.output { margin-top: 1rem; font-size: 1.4rem; min-height: 2rem; }
+.card { border-left: 4px solid #666; padding: .5rem .75rem; margin: .5rem 0; background: #0d0f12; }
+.card.user { border-color: var(--user); }
+.card.assistant { border-color: var(--assistant); }
+.card .role { font-size: .7rem; text-transform: uppercase; opacity: .6; }
+pre { white-space: pre-wrap; word-break: break-word; background: #0d0f12; padding: .75rem; font-size: .8rem; }
+.decision { margin-top: 1rem; font-size: .8rem; color: var(--assistant); }

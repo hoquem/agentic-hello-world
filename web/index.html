@@ -1,3 +1,36 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><title>Harness</title></head>
-<body><p>placeholder — replaced in Task 6</p></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Transparent Agent Harness — Hello World</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <main class="panels">
+    <section class="panel" id="user-panel">
+      <h2>User</h2>
+      <form id="composer">
+        <input id="message" value="Reply with exactly: Hello World!" />
+        <button type="submit">Send</button>
+      </form>
+      <div class="output" id="output"></div>
+    </section>
+
+    <section class="panel" id="harness-panel">
+      <h2>Harness · the deck</h2>
+      <div id="deck"></div>
+      <div class="decision" id="decision"></div>
+    </section>
+
+    <section class="panel" id="wire-panel">
+      <h2>LLM · the wire</h2>
+      <h3>► SENT</h3>
+      <pre id="sent"></pre>
+      <h3>◄ RECEIVED</h3>
+      <pre id="received"></pre>
+    </section>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>
