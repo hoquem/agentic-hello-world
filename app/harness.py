@@ -26,7 +26,10 @@ class Harness:
         self.messages: list[dict] = []  # the deck
 
     def add_user_message(self, content: str) -> None:
-        """Append a user message to the deck."""
+        """Append a user message to the deck.
+
+        :param content: the user's text to wrap as a ``user`` message.
+        """
         self.messages.append({"role": "user", "content": content})
 
     def run(self) -> Iterator[dict]:
@@ -40,8 +43,10 @@ class Harness:
 
         assembled = ""
         for chunk in self._chat_fn(request):
-            assembled += chunk["message"]["content"]
-            # Emit every chunk verbatim — including the final empty/done chunk —
+            content = chunk["message"]["content"]
+            if content:  # None or "" = this chunk carries no display text (e.g. a thinking-only or done chunk)
+                assembled += content
+            # Emit every chunk verbatim — including the empty/done/thinking chunks —
             # so the RECEIVED panel shows the literal wire, not a cleaned-up view.
             yield {"type": "received_chunk", "raw": chunk}
 

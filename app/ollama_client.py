@@ -26,6 +26,7 @@ def make_client(host: str, api_key: str) -> Client:
 
     :param host: API host, e.g. ``https://ollama.com``.
     :param api_key: Bearer token for the Authorization header.
+    :returns: a configured :class:`ollama.Client`.
     """
     return Client(host=host, headers={"Authorization": f"Bearer {api_key}"})
 

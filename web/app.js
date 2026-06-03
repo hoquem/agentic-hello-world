@@ -3,7 +3,12 @@ const $ = (id) => document.getElementById(id);
 function addCard(role, content) {
   const card = document.createElement("div");
   card.className = `card ${role}`;
-  card.innerHTML = `<div class="role">${role}</div><div>${content}</div>`;
+  const label = document.createElement("div");
+  label.className = "role";
+  label.textContent = role;
+  const body = document.createElement("div");
+  body.textContent = content;
+  card.append(label, body);
   $("deck").appendChild(card);
 }
 
