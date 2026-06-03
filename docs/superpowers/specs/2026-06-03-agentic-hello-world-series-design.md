@@ -8,7 +8,7 @@
 
 ## 1. Overview & goal
 
-A YouTube **series of 2-3 minute shorts** that builds an AI agent from nothing,
+A YouTube **series of ~3-minute shorts** that builds an AI agent from nothing,
 one capability at a time. The series sells exactly one idea:
 
 > **An agent is a stateless LLM (text in → text out) wrapped in a harness (the code you write). The LLM never changes. Every new ability lives in the harness.**
@@ -211,18 +211,17 @@ win, then tease the gap that motivates Ep 2 (the system prompt).
 | 2:25–2:30 | — | ▶ Ep. 2: The System Prompt · *Subscribe* | End card. |
 
 **VO word count / pacing:** ~430 words. At a genuinely gentle explainer pace
-(~135 wpm) plus pauses for the deck and stamps to land, this runs **~3:15–3:30**,
-not 2:30 — see the pacing decision in §7. To hold ~2.5 min, trim VO to ~330 words;
-the 1:25–2:05 real-UI block is the place to cut.
+(~135 wpm) plus pauses for the deck and stamps to land, this runs **~3:15–3:30**.
+**Decision: the series targets ~3-min shorts**, so the script stays full — no
+trimming. The timecodes in the table above are indicative and will stretch
+slightly to ~3:15–3:30 once paced with pauses.
 
 ---
 
 ## 7. Open questions / next steps
 
-- **Pacing decision (needs a call):** Episode 1's script runs ~3:15–3:30 at a
-  gentle pace, not 2:30. Either (a) trim VO to ~330 words to hold ~2.5 min, or
-  (b) rebrand the series as **~3-min shorts**. Recommendation: (b) — the content
-  earns the minute and trimming fights the "start gentle" goal.
+- **Pacing decision — RESOLVED:** the series targets **~3-min shorts**. Scripts
+  stay full; no VO trimming. (Was: 2.5-min target.)
 - **Model pick for the pilot:** default `gpt-oss:120b` (tool-capable, good all
   rounder). Smoke-test one `client.chat` call before locking the on-screen JSON
   caption, since the literal bytes appear in-frame.
