@@ -1,25 +1,27 @@
 """Application configuration loaded from the environment.
 
-:raises RuntimeError: when a required variable is absent. We fail loudly
-    rather than fall back to a default that would hide a misconfiguration.
+The app talks to a **local** Ollama daemon (``OLLAMA_HOST``), which is signed in
+to Ollama Cloud and transparently offloads cloud models. The cloud credential
+therefore lives in the daemon (via ``ollama signin``), not here — so there is no
+API key to load. Reachability of the daemon and availability of the model are
+checked separately and loudly by :func:`app.ollama_client.verify_daemon`; this
+loader only resolves the two settings and never touches the network.
 """
 import os
 from dataclasses import dataclass
 
-DEFAULT_HOST = "https://ollama.com"
-DEFAULT_MODEL = "gpt-oss:120b"
+DEFAULT_HOST = "http://localhost:11434"
+DEFAULT_MODEL = "kimi-k2.6:cloud"
 
 
 @dataclass(frozen=True)
 class Config:
     """Resolved runtime configuration.
 
-    :param api_key: Ollama Cloud API key (Bearer token).
-    :param host: Ollama API host URL.
-    :param model: Model name to call, e.g. ``gpt-oss:120b``.
+    :param host: local Ollama daemon URL, e.g. ``http://localhost:11434``.
+    :param model: cloud model name to call, e.g. ``kimi-k2.6:cloud``.
     """
 
-    api_key: str
     host: str
     model: str
 
@@ -27,16 +29,10 @@ class Config:
 def load_config() -> Config:
     """Read configuration from the environment.
 
-    :returns: a populated :class:`Config`.
-    :raises RuntimeError: if ``OLLAMA_API_KEY`` is not set.
+    :returns: a populated :class:`Config`, using local-daemon defaults when
+        ``OLLAMA_HOST`` / ``MODEL`` are unset.
     """
-    api_key = os.environ.get("OLLAMA_API_KEY")
-    if not api_key:
-        raise RuntimeError(
-            "OLLAMA_API_KEY is not set. Copy .env.example to .env and add your key."
-        )
     return Config(
-        api_key=api_key,
         host=os.environ.get("OLLAMA_HOST", DEFAULT_HOST),
         model=os.environ.get("MODEL", DEFAULT_MODEL),
     )

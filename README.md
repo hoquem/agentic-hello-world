@@ -1,20 +1,35 @@
 # Transparent Agent Harness
 
 The "for real" companion app for the *Building an AI Agent from Zero* video
-series. A user request is wrapped by a thin `Harness`, sent to an Ollama Cloud
-model, and streamed back — with the literal request JSON and raw response shown
-on screen. Nothing hidden.
+series. A user request is wrapped by a thin `Harness` and streamed to a cloud
+model — with the literal request JSON and raw response shown on screen. Nothing
+hidden.
+
+The request goes to your **local** Ollama daemon (`http://localhost:11434`),
+which is signed in to Ollama Cloud and forwards the call to the cloud model. So
+the on-screen SENT/RECEIVED bytes are the app↔daemon wire; the model itself runs
+in the cloud. The app sends no credential of its own — the daemon owns it.
 
 ## Setup
 
 1. `make setup-dev`
-2. `cp .env.example .env` and add your key from https://ollama.com/settings/keys
-3. `set -a && source .env && set +a && make dev`
-4. Open http://localhost:8000
+2. Sign in to Ollama Cloud and make the model available (one time):
+   ```
+   ollama signin
+   ollama pull kimi-k2.6:cloud
+   ```
+3. `cp .env.example .env` (defaults already target the local daemon + model)
+4. `set -a && source .env && set +a && make dev`
+5. Open http://localhost:8000
+
+If the daemon is down or the model isn't pulled, the app fails loudly on the
+first request (see `verify_daemon`) rather than hiding the misconfiguration.
 
 ## Test
 
 `make test`
+
+A live end-to-end check against the daemon: `venv/bin/python scripts/smoke_cloud.py`
 
 ## Episode scope
 

@@ -14,7 +14,7 @@ from sse_starlette.sse import EventSourceResponse
 
 from app.config import load_config
 from app.harness import Harness
-from app.ollama_client import make_client, stream_chat
+from app.ollama_client import make_client, stream_chat, verify_daemon
 
 WEB_DIR = Path(__file__).resolve().parent.parent / "web"
 
@@ -22,12 +22,14 @@ app = FastAPI(title="Transparent Agent Harness")
 
 
 def get_harness() -> Harness:
-    """Build a Harness wired to the real Ollama Cloud client.
+    """Build a Harness wired to the local Ollama daemon (which proxies to cloud).
 
-    Overridden in tests with a network-free fake.
+    Fails loudly via :func:`verify_daemon` if the daemon is down or the model
+    isn't pulled. Overridden in tests with a network-free fake.
     """
     cfg = load_config()
-    client = make_client(cfg.host, cfg.api_key)
+    client = make_client(cfg.host)
+    verify_daemon(client, cfg.model)
 
     def chat_fn(request: dict) -> Iterator[dict]:
         return stream_chat(client, request)

@@ -4,7 +4,7 @@ setup-dev:
 	python3 -m venv $(VENV)
 	$(VENV)/bin/pip install -e ".[dev]"
 
-dev:  # loads .env so the fail-fast config has its key; errors loudly if .env is missing
+dev:  # loads .env (OLLAMA_HOST / MODEL overrides); the local daemon holds the cloud signin
 	set -a && . ./.env && set +a && $(VENV)/bin/uvicorn app.server:app --reload --port 8000
 
 test:

@@ -1,18 +1,17 @@
-import pytest
 from app import config
 
 
 def test_load_config_reads_env(monkeypatch):
-    monkeypatch.setenv("OLLAMA_API_KEY", "sk-test")
-    monkeypatch.setenv("MODEL", "gpt-oss:120b")
-    monkeypatch.delenv("OLLAMA_HOST", raising=False)
+    monkeypatch.setenv("OLLAMA_HOST", "http://localhost:9999")
+    monkeypatch.setenv("MODEL", "glm-5.1:cloud")
     cfg = config.load_config()
-    assert cfg.api_key == "sk-test"
-    assert cfg.model == "gpt-oss:120b"
-    assert cfg.host == "https://ollama.com"  # default
+    assert cfg.host == "http://localhost:9999"
+    assert cfg.model == "glm-5.1:cloud"
 
 
-def test_load_config_raises_when_key_missing(monkeypatch):
-    monkeypatch.delenv("OLLAMA_API_KEY", raising=False)
-    with pytest.raises(RuntimeError, match="OLLAMA_API_KEY"):
-        config.load_config()
+def test_load_config_uses_local_daemon_defaults(monkeypatch):
+    monkeypatch.delenv("OLLAMA_HOST", raising=False)
+    monkeypatch.delenv("MODEL", raising=False)
+    cfg = config.load_config()
+    assert cfg.host == "http://localhost:11434"  # local daemon, which proxies to cloud
+    assert cfg.model == "kimi-k2.6:cloud"
