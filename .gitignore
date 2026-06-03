@@ -1,0 +1,9 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+
+# Secrets — never commit the real key
+.env
