@@ -17,6 +17,12 @@ dev = [
     "ruff>=0.7",
 ]
 
+# Ship only the app package. web/ (static assets), scripts/, and tests/ are not
+# distributable packages — without this, setuptools' flat-layout auto-discovery
+# fails once more than one top-level directory exists.
+[tool.setuptools]
+packages = ["app"]
+
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
