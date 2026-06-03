@@ -1,6 +1,6 @@
 # Resume notes — Episode 1 web app build
 
-**Last updated:** 2026-06-03 (all code tasks done; only live verification remains)
+**Last updated:** 2026-06-04 (Ep1 code done + verified live; now proxies through the LOCAL ollama daemon)
 
 ## What this project is
 A YouTube series ("Building an AI Agent from Zero") + a real, radically-transparent
@@ -31,10 +31,34 @@ them read the plan file.
 - [x] **Task 7** — `web/{index.html,style.css,app.js}` three-panel frontend. Commit `c2f0674`. NOT yet browser-verified (needs key).
 - [x] **Task 8** — `README.md`. Commit `552bf40`.
 - [x] Final whole-implementation code review done. One Critical bug fixed (`6442ca5`, see below).
-- [ ] **REMAINS (user, needs OLLAMA_API_KEY):** run `scripts/smoke_cloud.py` live + verify the
-      three-panel UI in a browser. Then superpowers:finishing-a-development-branch.
+- [x] **Live verification DONE (2026-06-04).** `scripts/smoke_cloud.py` and the live SSE endpoint
+      both stream a real reply from `kimi-k2.6:cloud` through the local daemon. SENT JSON confirmed.
+- [ ] **REMAINS:** optional human eyeball of the three-panel UI in a browser; decision on the
+      plan-doc + spec copy divergences (below); then superpowers:finishing-a-development-branch.
 
-**Status:** `make test` → 9 passed; `make lint` (ruff) → clean.
+**Status:** `make test` → 12 passed; `make lint` (ruff) → clean; live smoke + SSE verified.
+
+## Architecture change (2026-06-04): local daemon as cloud proxy — commit `2c8db77`
+The app no longer calls `https://ollama.com` directly with a Bearer token. It now points at the
+**local** ollama daemon (`http://localhost:11434`), which is signed in to Ollama Cloud
+(`ollama signin`) and forwards cloud-model calls. Consequences:
+- **No `OLLAMA_API_KEY`** anywhere in the app — the daemon owns the credential. `config.load_config`
+  is now pure (host+model only, no required field, no network); the fail-fast beat moved to
+  `ollama_client.verify_daemon(client, model)`, which raises loudly if the daemon is down or the
+  model isn't pulled (checks `/api/tags`; does NOT prove signin is valid — only a live call does).
+- **Default model is `kimi-k2.6:cloud`** (user's choice; it's pulled on their daemon). NOTE: this is
+  a reasoning model — early stream chunks carry `content:""` with text in a `thinking` field; the
+  harness assembles only `content`, the RECEIVED panel still shows every raw chunk verbatim.
+- Setup is now `ollama signin` + `ollama pull kimi-k2.6:cloud` (no key). See README / `.env.example`.
+- Packaging fix `0b8f9eb`: `pyproject.toml` pins `packages=["app"]` (flat-layout discovery broke once
+  `web/` existed).
+
+## Divergences from the plan/spec to resolve before/while filming
+1. `harness.py` None/empty-content guard (commit `6442ca5`) — plan's Task 4 still shows the old
+   crashing `assembled += chunk["message"]["content"]`. Update the plan doc if filming from it.
+2. **Whole architecture** is now local-daemon proxy, not direct cloud. The spec/plan and any on-screen
+   copy describe a direct "bytes to/from an Ollama Cloud model" wire; the real wire is app↔daemon, with
+   the daemon forwarding to cloud. README already acknowledges this hop — spec doc does not yet.
 
 ## Deviation from the plan (recorded for the filmed teaching artifact)
 The plan's verbatim `harness.py` did `assembled += chunk["message"]["content"]`. The
