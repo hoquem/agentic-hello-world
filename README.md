@@ -33,6 +33,9 @@ A live end-to-end check against the daemon: `venv/bin/python scripts/smoke_cloud
 
 ## Episode scope
 
-Episode 1 = one non-looping call. Later episodes extend `app/harness.py`
-(system prompt, tools, memory, planning, reasoning). The model never changes;
+Episode 1 = one non-looping call, with a single fixed **system prompt** you can
+toggle on/off in the UI to see how it changes the model's behavior. The UI shows
+the journey as an animated pipeline (You → Harness → Ollama) plus three panels:
+your message, the harness deck, and the literal wire. Later episodes extend
+`app/harness.py` (tools, memory, planning, reasoning). The model never changes;
 every capability lives in the harness.

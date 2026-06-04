@@ -2,6 +2,8 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
+> **Superseded in part (2026-06-04):** Episode 1 now (a) talks to a **local** Ollama daemon that proxies to Ollama Cloud — not the cloud directly — and (b) includes a single fixed **system prompt** with a with/without toggle, plus a redesigned UI (animated pipeline + living panels). The harness code in Task 4 below also predates the None-content guard and the `system_prompt` parameter. See `docs/superpowers/plans/2026-06-04-ep1-ui-redesign-system-prompt.md` for the current shape.
+
 **Goal:** Build a radically-transparent web app where a user types a request, a thin Python `Harness` wraps it in a user message, sends it to an Ollama Cloud model, streams the reply back, and displays it — while showing the *literal* JSON sent and the *raw* response received.
 
 **Architecture:** FastAPI backend exposing a Server-Sent-Events endpoint. A single, deliberately-readable `Harness` class owns the message "deck" and emits a typed event stream (`sent` → `received_chunk*` → `display`). The Ollama call is injected as a `chat_fn` dependency so the harness and server are testable without network access. A no-framework vanilla HTML/CSS/JS frontend renders three panels (User / Harness deck / raw wire) using the series' sacred role-color code.

@@ -20,7 +20,7 @@ sent to and received from the model — nothing hidden.
 - **Audience:** broad tech (open gentle, end on real mechanics).
 - **Narration:** scripted voiceover + timed captions.
 - **Animation tool:** Motion Canvas (TypeScript, code-driven).
-- **Real system:** Python harness + web UI, talking to **Ollama Cloud** models.
+- **Real system:** Python harness + web UI, talking to **Ollama** models. (As implemented for Ep 1, via the *local* Ollama daemon, which proxies to Ollama Cloud — see the LLM note below.)
 
 Production strategy: **lock the full 8-episode arc now; fully script Episode 1
 as the pilot + reusable template.** If Ep 1 lands, the rest are fill-in-the-blanks.
@@ -172,6 +172,13 @@ watch the deck grow a card and re-ship — that visual *is* the lesson.
     ollama.com/settings/keys), sent as `Authorization: Bearer <key>`.
   - Model naming: base name (e.g. `gpt-oss:120b`) when hitting the cloud API
     directly; the `-cloud` suffix is only for local-offload mode.
+  - **Implemented (2026-06-04):** the app instead points at the **local** Ollama
+    daemon (`http://localhost:11434`), which is signed in to Ollama Cloud
+    (`ollama signin`) and proxies cloud models. Consequences: no `OLLAMA_API_KEY`
+    in the app (the daemon owns it), and the model carries the `:cloud` suffix
+    (e.g. `kimi-k2.6:cloud`). Ollama can serve models locally or in the cloud; the
+    suffix is what selects cloud. The on-screen SENT/RECEIVED wire is therefore
+    the app↔daemon hop, with the daemon forwarding to the cloud model.
   - Tool-capable models for Eps 4-8: `gpt-oss:120b`, `qwen3-coder:480b`.
     Thinking models for Ep 7: `kimi-k2-thinking`, `deepseek-v3.1`.
 - **Transport:** Server-Sent Events to stream tokens *and* push the sent/received
