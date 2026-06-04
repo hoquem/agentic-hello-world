@@ -7,3 +7,9 @@ __pycache__/
 
 # Secrets — never commit the real key
 .env
+
+# Visual brainstorming companion artifacts
+.superpowers/
+
+# Playwright verification artifacts
+.playwright-mcp/
