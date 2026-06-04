@@ -424,8 +424,10 @@ Presentation layer — no automated test. Verified live in the browser. Type all
     <div class="seg back" id="seg-in"><span class="dir">◀ tokens streaming back</span></div>
     <div class="node ollama" id="node-ollama" data-state="idle">
       <div class="badge">🦙</div><div class="lbl">Ollama</div>
-      <div class="mode"><span>local</span><span class="cloud act">cloud</span></div>
-      <div class="sub">kimi-k2.6:cloud</div>
+      <!-- local/cloud and the model name are filled in from the actual request
+           we send (see app.js) — not hardcoded — so the badge reflects reality. -->
+      <div class="mode" id="ollama-mode" data-mode="cloud"><span class="local">local</span><span class="cloud">cloud</span></div>
+      <div class="sub" id="ollama-model">kimi-k2.6:cloud</div>
     </div>
   </section>
 
@@ -515,7 +517,9 @@ body { margin: 0; font-family: ui-monospace, monospace; background: var(--bg); c
 
 .mode { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; font-size: .6rem; letter-spacing: .05em; }
 .mode span { padding: 3px 9px; color: #6f7884; text-transform: uppercase; }
-.mode .cloud.act { background: var(--cloud); color: #08221d; font-weight: 700; }
+/* highlight whichever mode the actual model uses (set by app.js via data-mode) */
+.mode[data-mode="cloud"] .cloud { background: var(--cloud); color: #08221d; font-weight: 700; }
+.mode[data-mode="local"] .local { background: var(--user); color: #fff; font-weight: 700; }
 
 /* segments: a track with a moving pulse shown only while data flows */
 .seg { flex: 1; height: 4px; margin: 29px 6px 0; position: relative; background: var(--line); border-radius: 2px; overflow: hidden; }
@@ -670,6 +674,10 @@ $("composer").addEventListener("submit", (e) => {
       // precisely what was sent (the system message appears only if present).
       $("sent").textContent = JSON.stringify(event.request, null, 2);
       for (const m of event.request.messages) addCard(m.role, m.content);
+      // The Ollama node reflects the ACTUAL model from the request we just sent:
+      // a ":cloud" suffix means Ollama is offloading to the cloud, else it's local.
+      $("ollama-model").textContent = event.request.model;
+      $("ollama-mode").dataset.mode = event.request.model.endsWith(":cloud") ? "cloud" : "local";
       setPhase("waiting for the model…", { user: "done", harness: "done", ollama: "active", flow: "in" });
 
     } else if (event.type === "received_chunk") {
