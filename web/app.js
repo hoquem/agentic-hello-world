@@ -65,6 +65,21 @@ $("toggle").addEventListener("click", () => {
   $("toggle").dataset.on = useSystemPrompt ? "with" : "without";
 });
 
+// Hover popovers on the pipeline nodes. We open on hover and keep the popover
+// open while the cursor is over EITHER the node or the popover, with a short
+// grace delay before closing — so you can move the mouse onto the popover to
+// point at or select the code (e.g. while talking through it on camera).
+document.querySelectorAll(".node.has-pop").forEach((node) => {
+  const popover = node.querySelector(".popover");
+  let closeTimer;
+  const open = () => { clearTimeout(closeTimer); popover.classList.add("open"); };
+  const closeSoon = () => { closeTimer = setTimeout(() => popover.classList.remove("open"), 300); };
+  node.addEventListener("mouseenter", open);
+  node.addEventListener("mouseleave", closeSoon);
+  popover.addEventListener("mouseenter", open);   // moving onto the popover keeps it open
+  popover.addEventListener("mouseleave", closeSoon);
+});
+
 // Send a message and stream the harness's events back.
 $("composer").addEventListener("submit", (e) => {
   e.preventDefault();

@@ -30,19 +30,23 @@
       <div class="popover code">
         <div class="pop-h">The whole harness loop — that's it</div>
         <pre>def run(self):
-    # wrap the deck into a request (and show it)
+    # 1) Build the exact request from the conversation so far,
+    #    and hand it to the UI so it can show what we send.
     request = build_request(self.messages, self.model)
     yield {"type": "sent", "request": request}
 
-    # stream the reply, keeping the text
+    # 2) Stream the model's reply back, piece by piece.
+    #    self._chat_fn is the function that talks to Ollama.
     assembled = ""
     for chunk in self._chat_fn(request):
         content = chunk["message"]["content"]
+        # some chunks are the model "thinking" and carry no text — skip those
         if content:
             assembled += content
+        # ...but still show every raw chunk, exactly as received (nothing hidden)
         yield {"type": "received_chunk", "raw": chunk}
 
-    # remember it, then display it
+    # 3) Save the finished reply in the conversation, then show it.
     self.messages.append({"role": "assistant", "content": assembled})
     yield {"type": "display", "content": assembled}</pre>
         <div class="pop-cap">The model is stateless. Everything an "agent" does lives in code this simple — the harness, not the model.</div>
