@@ -4,33 +4,77 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Transparent Agent Harness — Hello World</title>
+  <link rel="icon" href="/favicon.ico" />
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
+  <!-- Top bar: what this is, and a live status of where we are in the flow. -->
+  <header class="bar">
+    <span class="title">Transparent Agent Harness</span>
+    <span class="by">· running on Ollama</span>
+    <span class="state" id="state">ready</span>
+  </header>
+
+  <!-- The pipeline: the mental model of the journey, You -> Harness -> Ollama.
+       Nodes light up as each stage completes; the segment between them animates
+       in the direction data is moving (blue out, teal back). -->
+  <section class="pipe">
+    <div class="node user" id="node-user" data-state="idle">
+      <div class="badge">🧑</div><div class="lbl">You</div><div class="sub">your message</div>
+    </div>
+    <div class="seg" id="seg-out"><span class="dir">harness adds system prompt &amp; sends ▶</span></div>
+    <div class="node harness" id="node-harness" data-state="idle">
+      <div class="badge">⚙️</div><div class="lbl">Harness</div><div class="sub">builds the deck</div>
+    </div>
+    <div class="seg back" id="seg-in"><span class="dir">◀ tokens streaming back</span></div>
+    <div class="node ollama" id="node-ollama" data-state="idle">
+      <div class="badge">🦙</div><div class="lbl">Ollama</div>
+      <!-- local/cloud and the model name are filled in from the actual request
+           we send (see app.js) — not hardcoded — so the badge reflects reality. -->
+      <div class="mode" id="ollama-mode" data-mode="cloud"><span class="local">local</span><span class="cloud">cloud</span></div>
+      <div class="sub" id="ollama-model">kimi-k2.6:cloud</div>
+    </div>
+  </section>
+
+  <!-- The three panels: you, the harness deck, and the raw wire. -->
   <main class="panels">
     <section class="panel" id="user-panel">
-      <h2>User</h2>
+      <h2>You</h2>
       <form id="composer">
-        <input id="message" value="Reply with exactly: Hello World!" />
+        <input id="message" value="Hello World!" autocomplete="off" />
         <button type="submit">Send</button>
       </form>
-      <div class="output" id="output"></div>
+      <div class="ans-lab">Answer</div>
+      <div class="answer" id="answer"></div>
     </section>
 
     <section class="panel" id="harness-panel">
-      <h2>Harness · the deck</h2>
+      <h2>
+        Harness · the deck
+        <span class="sp-label">system prompt</span>
+        <!-- Real toggle: flips whether the harness adds its system prompt. -->
+        <span class="toggle" id="toggle" data-on="with" title="Toggle the system prompt on/off">
+          <span class="opt with">with</span><span class="opt without">without</span>
+        </span>
+      </h2>
+      <div class="explain">
+        The harness wraps your message in a <b>system prompt</b> before sending.
+        The model is stateless — this standing instruction is how the harness
+        sets its behavior. You never type it.
+      </div>
       <div id="deck"></div>
       <div class="decision" id="decision"></div>
     </section>
 
     <section class="panel" id="wire-panel">
       <h2>LLM · the wire</h2>
-      <h3>► SENT</h3>
+      <h3>▸ SENT to Ollama</h3>
       <pre id="sent"></pre>
-      <h3>◄ RECEIVED</h3>
-      <pre id="received"></pre>
+      <h3>◂ RECEIVED <span class="muted">(raw chunks)</span></h3>
+      <div id="received"></div>
     </section>
   </main>
+
   <script src="/static/app.js"></script>
 </body>
 </html>
