@@ -55,6 +55,19 @@ Local Ollama daemon (localhost:11434) ──proxies──▶ Ollama Cloud (kimi-
 
 ---
 
+## Implementation principle — teaching-grade code (overrides convenience)
+
+The code is itself a teaching artifact: it will be shown on screen and shared, and viewers — not just maintainers — are expected to read it and understand it. Therefore, across every file in this spec:
+
+- **Simplicity beats cleverness.** Prefer the most obvious implementation a newcomer could follow top-to-bottom. No abstractions, indirection, or "flexibility" beyond what Episode 1 needs (YAGNI). If a simpler shape reads more clearly, choose it even at a small cost to brevity.
+- **Comments explain the *why* in plain English.** Short, jargon-light comments that a non-expert audience can follow — the kind you'd read aloud in a video. Avoid restating the code; explain intent and the teaching point (e.g. *why* the system message goes first, *why* nothing is hidden). reStructuredText docstrings on public functions/classes (`:param:` / `:returns:` / `:raises:`).
+- **`harness.py` and `web/app.js` especially** must read cleanly end-to-end as the "watch what's happening" files.
+- **No fallbacks that hide problems** — failures stay loud and visible (consistent with the rest of the build).
+
+These constraints apply to all code produced for this spec and should be reflected in the implementation plan and enforced in code review.
+
+---
+
 ## Component 1 — Harness: the system prompt
 
 `Harness.__init__` gains an optional `system_prompt`:
