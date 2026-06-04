@@ -60,8 +60,23 @@ body { margin: 0; font-family: ui-monospace, monospace; background: var(--bg); c
 .pop-h { font-size: .95rem; font-weight: 700; color: #e8e8e8; margin-bottom: 11px; }
 .popover.code .pop-h { color: var(--system); }
 .popover pre { background: #14161a; border: 1px solid #20242c; border-radius: 7px; padding: 14px;
-               font-size: .92rem; line-height: 1.6; color: #d6deea; white-space: pre; overflow-x: auto; margin: 0; }
+               font-size: .92rem; line-height: 1.6; color: #d6deea; white-space: pre; overflow: hidden; margin: 0; }
 .pop-cap { font-size: .86rem; color: #9aa4b2; margin: 12px 0 0; line-height: 1.5; }
+
+/* The code popover is a resizable window: drag the bottom-right corner. Its text
+   is sized in container-query units (cqi = 1% of this box's width), so it scales
+   to fill the window as you resize — the code always fits, no scrollbar needed. */
+.popover.code { width: 640px; min-width: 480px; max-width: 92vw; resize: both; overflow: hidden;
+                container-type: inline-size; }
+.popover.code pre { font-size: clamp(12px, 2.7cqi, 42px); }
+.popover.code .pop-h  { font-size: clamp(14px, 2.6cqi, 34px); }
+.popover.code .pop-cap { font-size: clamp(11px, 2.0cqi, 28px); }
+
+/* syntax colors for the harness code (distinct, camera-legible) */
+.popover pre .c  { color: #7e8794; font-style: italic; }   /* comments */
+.popover pre .k  { color: #c586c0; }                        /* keywords */
+.popover pre .s  { color: #6ac46a; }                        /* strings  */
+.popover pre .fn { color: #dcdcaa; }                        /* functions */
 .popover.info p { font-size: .92rem; color: #d6deea; line-height: 1.55; margin: 0 0 10px; }
 .popover.info ul { list-style: none; margin: 0 0 10px; padding: 0; }
 .popover.info li { font-size: .9rem; color: #d6deea; line-height: 1.7; }
