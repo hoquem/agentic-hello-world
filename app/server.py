@@ -13,7 +13,7 @@ from fastapi.staticfiles import StaticFiles
 from sse_starlette.sse import EventSourceResponse
 
 from app.config import load_config
-from app.harness import Harness
+from app.harness import DEFAULT_SYSTEM_PROMPT, Harness
 from app.ollama_client import make_client, stream_chat, verify_daemon
 
 WEB_DIR = Path(__file__).resolve().parent.parent / "web"
@@ -21,11 +21,15 @@ WEB_DIR = Path(__file__).resolve().parent.parent / "web"
 app = FastAPI(title="Transparent Agent Harness")
 
 
-def get_harness() -> Harness:
+def get_harness(system: bool = True) -> Harness:
     """Build a Harness wired to the local Ollama daemon (which proxies to cloud).
 
     Fails loudly via :func:`verify_daemon` if the daemon is down or the model
     isn't pulled. Overridden in tests with a network-free fake.
+
+    :param system: when true (default), the harness adds its standing system
+        prompt; when false, only the user's message is sent. Driven by the
+        ``?system=`` query param, so the UI's with/without toggle is real.
     """
     cfg = load_config()
     client = make_client(cfg.host)
@@ -34,7 +38,8 @@ def get_harness() -> Harness:
     def chat_fn(request: dict) -> Iterator[dict]:
         return stream_chat(client, request)
 
-    return Harness(chat_fn=chat_fn, model=cfg.model)
+    system_prompt = DEFAULT_SYSTEM_PROMPT if system else None
+    return Harness(chat_fn=chat_fn, model=cfg.model, system_prompt=system_prompt)
 
 
 @app.get("/api/chat")
@@ -53,11 +58,18 @@ async def chat(
 
 
 @app.get("/")
+@app.get("/index.html")
 async def root() -> FileResponse:
-    """Serve the single-page frontend."""
+    """Serve the single-page frontend (at ``/`` and the friendlier ``/index.html``)."""
     return FileResponse(WEB_DIR / "index.html")
 
 
-# check_dir=False: don't raise at import if web/ is absent (it's created later in
-# the build order); a missing asset will 404 at request time rather than hide the cause.
+@app.get("/favicon.ico")
+async def favicon() -> FileResponse:
+    """Serve the app icon so the browser's automatic request doesn't 404."""
+    return FileResponse(WEB_DIR / "favicon.svg", media_type="image/svg+xml")
+
+
+# check_dir=False: don't raise at import if web/ is absent; a missing asset 404s
+# at request time rather than hiding the cause.
 app.mount("/static", StaticFiles(directory=WEB_DIR, check_dir=False), name="static")

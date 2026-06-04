@@ -18,6 +18,23 @@ def make_fake_harness() -> Harness:
     return Harness(chat_fn=fake_chat_fn, model="gpt-oss:120b")
 
 
+def fake_get_harness(system: bool = True) -> Harness:
+    # Mirrors the real get_harness mapping, but network-free: the `system` query
+    # param decides whether a system prompt is configured.
+    system_prompt = "SYSTEM PROMPT" if system else None
+    return Harness(chat_fn=fake_chat_fn, model="m", system_prompt=system_prompt)
+
+
+def _sent_messages(body: str) -> list[dict]:
+    """Pull the `sent` event's request messages out of an SSE response body."""
+    for line in body.splitlines():
+        if line.startswith("data:"):
+            payload = json.loads(line[len("data:"):].strip())
+            if payload["type"] == "sent":
+                return payload["request"]["messages"]
+    raise AssertionError("no 'sent' event found in stream")
+
+
 def test_chat_endpoint_streams_events():
     server.app.dependency_overrides[server.get_harness] = make_fake_harness
     try:
@@ -30,7 +47,6 @@ def test_chat_endpoint_streams_events():
     finally:
         server.app.dependency_overrides.clear()
 
-    # Collect JSON payloads from the SSE "data:" lines.
     payloads = [
         json.loads(line[len("data:"):].strip())
         for line in body.splitlines()
@@ -42,8 +58,45 @@ def test_chat_endpoint_streams_events():
     assert payloads[-1]["content"] == "Hello World!"
 
 
-def test_root_serves_index():
+def test_system_true_includes_system_message():
+    server.app.dependency_overrides[server.get_harness] = fake_get_harness
+    try:
+        client = TestClient(server.app)
+        with client.stream(
+            "GET", "/api/chat", params={"message": "hi", "system": "true"}
+        ) as resp:
+            body = "".join(resp.iter_text())
+    finally:
+        server.app.dependency_overrides.clear()
+
+    roles = [m["role"] for m in _sent_messages(body)]
+    assert roles == ["system", "user"]
+
+
+def test_system_false_omits_system_message():
+    server.app.dependency_overrides[server.get_harness] = fake_get_harness
+    try:
+        client = TestClient(server.app)
+        with client.stream(
+            "GET", "/api/chat", params={"message": "hi", "system": "false"}
+        ) as resp:
+            body = "".join(resp.iter_text())
+    finally:
+        server.app.dependency_overrides.clear()
+
+    roles = [m["role"] for m in _sent_messages(body)]
+    assert roles == ["user"]
+
+
+def test_root_and_index_serve_html():
     client = TestClient(server.app)
-    resp = client.get("/")
+    for path in ["/", "/index.html"]:
+        resp = client.get(path)
+        assert resp.status_code == 200
+        assert "text/html" in resp.headers["content-type"]
+
+
+def test_favicon_served():
+    client = TestClient(server.app)
+    resp = client.get("/favicon.ico")
     assert resp.status_code == 200
-    assert "text/html" in resp.headers["content-type"]
