@@ -104,13 +104,13 @@ def test_model_param_selects_the_model():
     try:
         client = TestClient(server.app)
         with client.stream(
-            "GET", "/api/chat", params={"message": "hi", "model": "deepseek-r1:1.5b"}
+            "GET", "/api/chat", params={"message": "hi", "model": "qwen3-coder-next:cloud"}
         ) as resp:
             body = "".join(resp.iter_text())
     finally:
         server.app.dependency_overrides.clear()
 
-    assert _sent_request(body)["model"] == "deepseek-r1:1.5b"
+    assert _sent_request(body)["model"] == "qwen3-coder-next:cloud"
 
 
 def test_root_and_index_serve_html():

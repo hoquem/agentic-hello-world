@@ -13,10 +13,14 @@ in the cloud. The app sends no credential of its own — the daemon owns it.
 ## Setup
 
 1. `make setup-dev`
-2. Sign in to Ollama Cloud and make the model available (one time):
+2. Sign in to Ollama Cloud and make the demo models available (one time). They
+   run in the cloud, so a "pull" only fetches tiny metadata — no local disk/GPU:
    ```
    ollama signin
-   ollama pull kimi-k2.6:cloud
+   ollama pull kimi-k2.6:cloud         # reasoning (streams thinking) — default
+   ollama pull deepseek-v3.2:cloud     # reasoning
+   ollama pull glm-5.1:cloud           # reasoning
+   ollama pull qwen3-coder-next:cloud  # non-reasoning (content only)
    ```
 3. (optional) `cp .env.example .env` — only needed to override the local-daemon defaults
 4. `make dev`

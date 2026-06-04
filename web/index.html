@@ -14,20 +14,16 @@
     <span class="by">· running on Ollama</span>
     <!-- Pick the model the harness calls. Same harness, any model — switch a
          reasoning model and a plain one to see the difference on the wire.
-         Local models must be pulled first (e.g. `ollama pull llama3.2:1b`). -->
+         All run in Ollama's cloud (pull once: `ollama pull <name>:cloud`). -->
     <label class="model-pick">model
       <select id="model">
-        <optgroup label="Local · no reasoning">
-          <option value="llama3.2:1b">llama3.2:1b</option>
-          <option value="gemma3:1b">gemma3:1b</option>
-        </optgroup>
-        <optgroup label="Local · reasoning">
-          <option value="deepseek-r1:1.5b">deepseek-r1:1.5b</option>
-          <option value="qwen3:1.7b">qwen3:1.7b</option>
-        </optgroup>
-        <optgroup label="Cloud">
+        <optgroup label="Reasoning · streams thinking">
           <option value="kimi-k2.6:cloud" selected>kimi-k2.6:cloud</option>
+          <option value="deepseek-v3.2:cloud">deepseek-v3.2:cloud</option>
           <option value="glm-5.1:cloud">glm-5.1:cloud</option>
+        </optgroup>
+        <optgroup label="Non-reasoning · content only">
+          <option value="qwen3-coder-next:cloud">qwen3-coder-next:cloud</option>
         </optgroup>
       </select>
     </label>
