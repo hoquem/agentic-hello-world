@@ -41,6 +41,32 @@ body { margin: 0; font-family: ui-monospace, monospace; background: var(--bg); c
 .mode[data-mode="cloud"] .cloud { background: var(--cloud); color: #08221d; font-weight: 700; }
 .mode[data-mode="local"] .local { background: var(--user); color: #fff; font-weight: 700; }
 
+/* ---- hover popovers on the Harness and Ollama nodes ---- */
+/* a small "hover" cue so the audience knows there's more to see */
+.has-pop .badge { cursor: help; }
+.hint { font-size: .6rem; color: #6f7884; border: 1px solid var(--line); border-radius: 8px; padding: 0 5px; margin-left: 4px; white-space: nowrap; }
+
+/* the popover itself: hidden until you hover the node (pure CSS, no JS) */
+.popover { position: absolute; top: 100%; margin-top: 12px; left: 50%; transform: translateX(-50%);
+           width: max-content; max-width: 620px; background: #0d0f12; border: 1px solid #2f3540;
+           border-radius: 10px; padding: 14px 16px; box-shadow: 0 12px 30px rgba(0,0,0,.55);
+           text-align: left; opacity: 0; visibility: hidden; transition: opacity .12s ease; z-index: 50; }
+.node:hover .popover { opacity: 1; visibility: visible; }
+/* the rightmost (Ollama) popover anchors to the right so it doesn't overflow the page */
+#node-ollama .popover { left: auto; right: 0; transform: none; }
+.pop-h { font-size: .8rem; font-weight: 700; color: #e8e8e8; margin-bottom: 9px; }
+.popover.code .pop-h { color: var(--system); }
+.popover pre { background: #14161a; border: 1px solid #20242c; border-radius: 7px; padding: 11px;
+               font-size: .74rem; line-height: 1.5; color: #cdd6e0; white-space: pre; overflow-x: auto; margin: 0; }
+.pop-cap { font-size: .74rem; color: #9aa4b2; margin: 10px 0 0; line-height: 1.45; }
+.popover.info p { font-size: .8rem; color: #cdd6e0; line-height: 1.5; margin: 0 0 8px; }
+.popover.info ul { list-style: none; margin: 0 0 8px; padding: 0; }
+.popover.info li { font-size: .78rem; color: #cdd6e0; line-height: 1.6; }
+.popover.info code { background: #14161a; border: 1px solid #20242c; border-radius: 4px; padding: 0 4px; font-size: .72rem; color: #9fb3c8; }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
+.local-dot { background: var(--user); }
+.cloud-dot { background: var(--cloud); }
+
 /* segments: a track with a moving pulse shown only while data flows */
 .seg { flex: 1; height: 4px; margin: 29px 6px 0; position: relative; background: var(--line); border-radius: 2px; overflow: hidden; }
 .seg .dir { position: absolute; top: -19px; left: 50%; transform: translateX(-50%); font-size: .7rem; color: #8a93a3; white-space: nowrap; }

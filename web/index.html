@@ -23,16 +23,49 @@
       <div class="badge">🧑</div><div class="lbl">You</div><div class="sub">your message</div>
     </div>
     <div class="seg" id="seg-out"><span class="dir">harness adds system prompt &amp; sends ▶</span></div>
-    <div class="node harness" id="node-harness" data-state="idle">
-      <div class="badge">⚙️</div><div class="lbl">Harness</div><div class="sub">builds the deck</div>
+    <div class="node harness has-pop" id="node-harness" data-state="idle">
+      <div class="badge">⚙️</div><div class="lbl">Harness</div><div class="sub">builds the deck <span class="hint">hover ⓘ</span></div>
+      <!-- Hover popover: the ACTUAL core of the harness, so the audience can see
+           an "agent" is just this much code. Shown via CSS on :hover. -->
+      <div class="popover code">
+        <div class="pop-h">The whole harness loop — that's it</div>
+        <pre>def run(self):
+    # wrap the deck into a request (and show it)
+    request = build_request(self.messages, self.model)
+    yield {"type": "sent", "request": request}
+
+    # stream the reply, keeping the text
+    assembled = ""
+    for chunk in self._chat_fn(request):
+        content = chunk["message"]["content"]
+        if content:
+            assembled += content
+        yield {"type": "received_chunk", "raw": chunk}
+
+    # remember it, then display it
+    self.messages.append({"role": "assistant", "content": assembled})
+    yield {"type": "display", "content": assembled}</pre>
+        <div class="pop-cap">The model is stateless. Everything an "agent" does lives in code this simple — the harness, not the model.</div>
+      </div>
     </div>
     <div class="seg back" id="seg-in"><span class="dir">◀ tokens streaming back</span></div>
-    <div class="node ollama" id="node-ollama" data-state="idle">
+    <div class="node ollama has-pop" id="node-ollama" data-state="idle">
       <div class="badge">🦙</div><div class="lbl">Ollama</div>
       <!-- local/cloud and the model name are filled in from the actual request
            we send (see app.js) — not hardcoded — so the badge reflects reality. -->
       <div class="mode" id="ollama-mode" data-mode="cloud"><span class="local">local</span><span class="cloud">cloud</span></div>
-      <div class="sub" id="ollama-model">kimi-k2.6:cloud</div>
+      <div class="sub"><span id="ollama-model">kimi-k2.6:cloud</span> <span class="hint">hover ⓘ</span></div>
+      <!-- Hover popover: Ollama just runs the model; any LLM works here. -->
+      <div class="popover info">
+        <div class="pop-h">Ollama runs the model</div>
+        <p><b>Any LLM works here</b> — local or remote, any model. The harness never
+           changes; you only swap the model name:</p>
+        <ul>
+          <li><span class="dot local-dot"></span><b>local</b> — runs on your machine: <code>llama3</code>, <code>qwen3</code>, …</li>
+          <li><span class="dot cloud-dot"></span><b>cloud</b> — offloaded to Ollama Cloud: <code>kimi-k2.6:cloud</code>, <code>gpt-oss:120b-cloud</code>, …</li>
+        </ul>
+        <p class="pop-cap">Right now: <b id="pop-model">kimi-k2.6:cloud</b>. The model is interchangeable — the harness is the constant.</p>
+      </div>
     </div>
   </section>
 
