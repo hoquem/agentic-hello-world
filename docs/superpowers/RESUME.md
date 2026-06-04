@@ -1,6 +1,25 @@
 # Resume notes — Episode 1 web app build
 
-**Last updated:** 2026-06-04 (Ep1 code done + verified live; now proxies through the LOCAL ollama daemon)
+**Last updated:** 2026-06-04 (Ep1 done + UI redesign + system-prompt toggle, all verified live)
+
+## Latest: UI redesign + functional system-prompt toggle (2026-06-04) — DONE
+Brainstormed (visual companion) → spec → plan → built via subagent-driven-development, all reviewed.
+- **Spec:** `docs/superpowers/specs/2026-06-04-ep1-ui-redesign-system-prompt-design.md`
+- **Plan:** `docs/superpowers/plans/2026-06-04-ep1-ui-redesign-system-prompt.md`
+- New UI: animated pipeline (You → Harness → Ollama, local|cloud badge from the actual model) + three
+  living panels; thinking vs content colored in the wire; "what's a harness?" explainer.
+- New capability: harness has an optional system prompt (`Harness(..., system_prompt=...)`,
+  `DEFAULT_SYSTEM_PROMPT`); server `?system=true|false` drives a real **with ⇄ without** toggle.
+  Deck cards render from the `sent` event (shown==sent can't diverge).
+- Fixes: `/index.html` + `/favicon.ico` routes (were 404), `web/favicon.svg`.
+- **Verified:** `make test` → 17 passed; ruff clean; live smoke; **both toggle states confirmed in a
+  real browser** (with → echoes "Hello World!"; without → model's chatty default). Final review:
+  APPROVED WITH MINOR NOTES (minors fixed in `d8a5b4e`).
+- Commits: `c2e45ec` harness, `755d07e` server, `ee63486` frontend, `56c53a8` docs, `d8a5b4e` polish.
+- **REMAINS:** superpowers:finishing-a-development-branch.
+
+---
+
 
 ## What this project is
 A YouTube series ("Building an AI Agent from Zero") + a real, radically-transparent
