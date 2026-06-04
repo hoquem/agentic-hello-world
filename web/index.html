@@ -12,21 +12,6 @@
   <header class="bar">
     <span class="title">Transparent Agent Harness</span>
     <span class="by">· running on Ollama</span>
-    <!-- Pick the model the harness calls. Same harness, any model — switch a
-         reasoning model and a plain one to see the difference on the wire.
-         All run in Ollama's cloud (pull once: `ollama pull <name>:cloud`). -->
-    <label class="model-pick">model
-      <select id="model">
-        <optgroup label="Reasoning · streams thinking">
-          <option value="kimi-k2.6:cloud" selected>kimi-k2.6:cloud</option>
-          <option value="deepseek-v3.2:cloud">deepseek-v3.2:cloud</option>
-          <option value="glm-5.1:cloud">glm-5.1:cloud</option>
-        </optgroup>
-        <optgroup label="Non-reasoning · content only">
-          <option value="qwen3-coder-next:cloud">qwen3-coder-next:cloud</option>
-        </optgroup>
-      </select>
-    </label>
     <span class="state" id="state">ready</span>
   </header>
 
@@ -72,10 +57,20 @@
     <div class="seg back" id="seg-in"><span class="dir">◀ tokens streaming back</span></div>
     <div class="node ollama has-pop" id="node-ollama" data-state="idle">
       <div class="badge">🦙</div><div class="lbl">Ollama</div>
-      <!-- local/cloud and the model name are filled in from the actual request
-           we send (see app.js) — not hardcoded — so the badge reflects reality. -->
-      <div class="mode" id="ollama-mode" data-mode="cloud"><span class="local">local</span><span class="cloud">cloud</span></div>
+      <!-- the model name is filled in from the actual request we send (app.js). -->
       <div class="sub"><span id="ollama-model">kimi-k2.6:cloud</span> <span class="hint">hover ⓘ</span></div>
+      <!-- Pick the model the harness calls. Same harness, any model — switch a
+           reasoning model and a plain one to see the difference on the wire. -->
+      <select id="model" class="model-pick" title="Switch the model — same harness, any model">
+        <optgroup label="Reasoning · streams thinking">
+          <option value="kimi-k2.6:cloud" selected>kimi-k2.6:cloud</option>
+          <option value="deepseek-v3.2:cloud">deepseek-v3.2:cloud</option>
+          <option value="glm-5.1:cloud">glm-5.1:cloud</option>
+        </optgroup>
+        <optgroup label="Non-reasoning · content only">
+          <option value="qwen3-coder-next:cloud">qwen3-coder-next:cloud</option>
+        </optgroup>
+      </select>
       <!-- Hover popover: Ollama just runs the model; any LLM works here. -->
       <div class="popover info">
         <div class="pop-h">Ollama runs the model</div>

@@ -16,10 +16,12 @@ body { margin: 0; font-family: ui-monospace, monospace; background: var(--bg); c
        border-bottom: 1px solid var(--line); background: #1a1d23; }
 .bar .title { font-size: .92rem; text-transform: uppercase; letter-spacing: .12em; color: #aeb6c2; font-weight: 600; }
 .bar .by { font-size: .72rem; color: #6f7884; }
-.model-pick { margin-left: 18px; font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; color: #6f7884; display: flex; align-items: center; gap: 6px; }
-.model-pick select { font-family: inherit; font-size: .8rem; text-transform: none; letter-spacing: 0; color: #cfd6df; background: var(--ink); border: 1px solid #333a45; border-radius: 6px; padding: 4px 8px; cursor: pointer; }
-.model-pick select:focus { outline: none; border-color: var(--cloud); }
 .state { margin-left: auto; font-size: .9rem; color: var(--cloud); }
+/* model picker, under the Ollama node */
+.model-pick { margin-top: 8px; max-width: 160px; font-family: inherit; font-size: .72rem;
+              color: #cfd6df; background: var(--ink); border: 1px solid #333a45; border-radius: 6px;
+              padding: 3px 6px; cursor: pointer; }
+.model-pick:focus { outline: none; border-color: var(--cloud); }
 
 /* ---- pipeline ---- */
 .pipe { display: flex; align-items: flex-start; padding: 22px 26px 20px; border-bottom: 1px solid var(--line); }
@@ -37,12 +39,6 @@ body { margin: 0; font-family: ui-monospace, monospace; background: var(--bg); c
   font-size: .8rem; background: var(--assistant); color: #08120a; border-radius: 50%; width: 18px; height: 18px;
   display: flex; align-items: center; justify-content: center; }
 @keyframes breathe { 0%,100% { opacity: .4 } 50% { opacity: 1 } }
-
-.mode { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; font-size: .6rem; letter-spacing: .05em; }
-.mode span { padding: 3px 9px; color: #6f7884; text-transform: uppercase; }
-/* highlight whichever mode the actual model uses (set by app.js via data-mode) */
-.mode[data-mode="cloud"] .cloud { background: var(--cloud); color: #08221d; font-weight: 700; }
-.mode[data-mode="local"] .local { background: var(--user); color: #fff; font-weight: 700; }
 
 /* ---- hover popovers on the Harness and Ollama nodes ---- */
 /* a small "hover" cue so the audience knows there's more to see */

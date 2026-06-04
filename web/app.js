@@ -152,11 +152,9 @@ $("composer").addEventListener("submit", (e) => {
       // precisely what was sent (the system message appears only if present).
       $("sent").textContent = JSON.stringify(event.request, null, 2);
       for (const m of event.request.messages) addCard(m.role, m.content);
-      // The Ollama node reflects the ACTUAL model from the request we just sent:
-      // a ":cloud" suffix means Ollama is offloading to the cloud, else it's local.
+      // The Ollama node shows the ACTUAL model from the request we just sent.
       $("ollama-model").textContent = event.request.model;
       $("pop-model").textContent = event.request.model;  // keep the hover popover accurate too
-      $("ollama-mode").dataset.mode = event.request.model.endsWith(":cloud") ? "cloud" : "local";
       setPhase("waiting for the model…", { user: "done", harness: "done", ollama: "active", flow: "in" });
 
     } else if (event.type === "received_chunk") {
