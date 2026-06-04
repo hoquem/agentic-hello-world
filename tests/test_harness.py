@@ -56,3 +56,25 @@ def test_harness_handles_none_content_chunks():
     # ...but they contribute no text to the assembled reply.
     assert events[-1] == {"type": "display", "content": "Hello"}
     assert h.messages[-1] == {"role": "assistant", "content": "Hello"}
+
+
+def test_harness_prepends_system_prompt_to_deck():
+    h = Harness(chat_fn=fake_chat_fn, model="m", system_prompt="be brief")
+    h.add_user_message("hi")
+    events = list(h.run())
+
+    # The system message must be first, then the user message — and the SENT
+    # request must show exactly that (nothing added in secret).
+    assert events[0]["type"] == "sent"
+    assert events[0]["request"]["messages"] == [
+        {"role": "system", "content": "be brief"},
+        {"role": "user", "content": "hi"},
+    ]
+
+
+def test_harness_without_system_prompt_sends_only_user():
+    h = Harness(chat_fn=fake_chat_fn, model="m")  # no system prompt
+    h.add_user_message("hi")
+    events = list(h.run())
+
+    assert events[0]["request"]["messages"] == [{"role": "user", "content": "hi"}]
