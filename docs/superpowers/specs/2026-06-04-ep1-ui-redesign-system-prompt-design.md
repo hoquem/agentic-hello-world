@@ -113,6 +113,7 @@ Vanilla HTML/CSS/JS, no framework. Three regions:
 ### Three living panels
 - **You:** the message input + Send; below it, the assembled answer rendered large, typing in live (caret) as `content` arrives.
 - **Harness · the deck:** a short "what's a harness?" explainer (amber); the message cards as they exist in the deck — **`system` (amber)** when present, **`user` (blue)**, **`assistant` (green)**; a `decision: display →` line; and the **`with ⇄ without` toggle** in the panel header.
+  - **The deck cards (including the amber `system` card) are rendered from the `sent` event's `request.messages`, not from the page-level toggle boolean.** The toggle only controls the `system` query param on the next request; what the deck shows is always exactly what the server reported sending. This keeps shown==sent impossible to diverge.
 - **LLM · the wire:** the literal `SENT` JSON (including the system message when present) and the raw `RECEIVED` chunks. Each chunk distinguishes the model's **`thinking`** tokens (purple) from **`content`** tokens (green), read directly from the raw chunk fields (`raw.message.thinking` vs `raw.message.content`). Nothing is cleaned up.
 
 ### The functional toggle
@@ -148,7 +149,7 @@ The SSE event shapes are unchanged (`sent` / `received_chunk` / `display`, plus 
   - With a system prompt: the deck and the `sent` request `messages` begin with the `system` message, then the user message; assistant is appended; `display` content is correct.
   - Without a system prompt (`None`): the deck/`sent` `messages` contain only the user message.
   - Existing tests retained: event order, raw-chunk passthrough, None/empty-content handling.
-- **Server test:** `GET /api/chat?...&system=false` → the streamed `sent` event's `request.messages` has **no** `system` role; `&system=true` (and default) → it **does**. Implemented by overriding `get_harness` with a fake that honors the `system` flag and a fake `chat_fn`, so the param→deck mapping is exercised without network.
+- **Server test:** `GET /api/chat?...&system=false` → the streamed `sent` event's `request.messages` has **no** `system` role; `&system=true` (and default) → it **does**. Implemented by overriding `get_harness` with a fake that honors the `system` flag and a fake `chat_fn`, so the param→deck mapping is exercised without network. (Note: this override-based test covers the `system` flag's effect on deck-building, but not the real `get_harness`'s `DEFAULT_SYSTEM_PROMPT if system else None` line itself — that mapping is trivial and verified in the live run.)
 - **Routing tests:** `/` and `/index.html` both return HTML 200; `/favicon.ico` returns 200.
 - **Frontend:** presentation layer — verified live in the browser (pipeline animates, toggle flips the deck/SENT/reply, thinking vs content colored). No automated UI test.
 
