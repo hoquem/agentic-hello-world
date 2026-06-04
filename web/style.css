@@ -121,6 +121,17 @@ button { background: var(--user); color: #fff; border: 0; border-radius: 7px; pa
 .explain { border-left: 4px solid var(--system); background: rgba(245,166,35,.07); border-radius: 0 8px 8px 0;
            padding: 9px 12px; margin-bottom: 12px; font-size: .8rem; line-height: 1.5; color: #d8c7a6; }
 .explain b { color: #f5d79a; }
+
+/* the editable system prompt (amber = the harness/system colour) */
+.sp-edit { display: block; margin-bottom: 12px; }
+.sp-edit-label { display: block; font-size: .62rem; text-transform: uppercase; letter-spacing: .08em;
+                 color: var(--system); margin-bottom: 5px; }
+#system-prompt { width: 100%; resize: vertical; font-family: inherit; font-size: .9rem; line-height: 1.45;
+                 color: #f3e6cc; background: var(--ink); border: 1px solid rgba(245,166,35,.4);
+                 border-radius: 7px; padding: 9px 11px; }
+#system-prompt:focus { outline: none; border-color: var(--system); box-shadow: 0 0 0 2px rgba(245,166,35,.18); }
+#system-prompt:disabled { opacity: .4; border-color: var(--line); cursor: not-allowed; }
+
 .card { border-left: 5px solid #666; border-radius: 0 7px 7px 0; background: var(--ink); padding: 9px 13px; margin: 8px 0; }
 .card .role { font-size: .66rem; text-transform: uppercase; letter-spacing: .08em; opacity: .75; margin-bottom: 3px; }
 .card.system { border-color: var(--system); } .card.system .role { color: var(--system); }

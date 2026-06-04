@@ -18,11 +18,10 @@ def make_fake_harness() -> Harness:
     return Harness(chat_fn=fake_chat_fn, model="gpt-oss:120b")
 
 
-def fake_get_harness(system: bool = True) -> Harness:
-    # Mirrors the real get_harness mapping, but network-free: the `system` query
-    # param decides whether a system prompt is configured.
-    system_prompt = "SYSTEM PROMPT" if system else None
-    return Harness(chat_fn=fake_chat_fn, model="m", system_prompt=system_prompt)
+def fake_get_harness(system_prompt: str = "DEFAULT") -> Harness:
+    # Mirrors the real get_harness mapping, but network-free: the `system_prompt`
+    # query param is the actual prompt text; empty string means "no system prompt".
+    return Harness(chat_fn=fake_chat_fn, model="m", system_prompt=system_prompt or None)
 
 
 def _sent_messages(body: str) -> list[dict]:
@@ -58,27 +57,28 @@ def test_chat_endpoint_streams_events():
     assert payloads[-1]["content"] == "Hello World!"
 
 
-def test_system_true_includes_system_message():
+def test_custom_system_prompt_is_sent_verbatim():
     server.app.dependency_overrides[server.get_harness] = fake_get_harness
     try:
         client = TestClient(server.app)
         with client.stream(
-            "GET", "/api/chat", params={"message": "hi", "system": "true"}
+            "GET", "/api/chat", params={"message": "hi", "system_prompt": "Talk like a pirate."}
         ) as resp:
             body = "".join(resp.iter_text())
     finally:
         server.app.dependency_overrides.clear()
 
-    roles = [m["role"] for m in _sent_messages(body)]
-    assert roles == ["system", "user"]
+    messages = _sent_messages(body)
+    assert [m["role"] for m in messages] == ["system", "user"]
+    assert messages[0]["content"] == "Talk like a pirate."  # the edited prompt is what we send
 
 
-def test_system_false_omits_system_message():
+def test_empty_system_prompt_omits_system_message():
     server.app.dependency_overrides[server.get_harness] = fake_get_harness
     try:
         client = TestClient(server.app)
         with client.stream(
-            "GET", "/api/chat", params={"message": "hi", "system": "false"}
+            "GET", "/api/chat", params={"message": "hi", "system_prompt": ""}
         ) as resp:
             body = "".join(resp.iter_text())
     finally:

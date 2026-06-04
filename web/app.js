@@ -59,10 +59,12 @@ function addChunk(raw) {
   $("received").appendChild(line);
 }
 
-// The toggle in the Harness panel header: flip the system prompt on/off.
+// The toggle in the Harness panel header: include the system prompt, or not.
+// "without" also disables the editable field, to make it clear nothing is sent.
 $("toggle").addEventListener("click", () => {
   useSystemPrompt = !useSystemPrompt;
   $("toggle").dataset.on = useSystemPrompt ? "with" : "without";
+  $("system-prompt").disabled = !useSystemPrompt;
 });
 
 // Hover popovers on the pipeline nodes. We open on hover and keep the popover
@@ -96,9 +98,12 @@ $("composer").addEventListener("submit", (e) => {
 
   setPhase("sending…", { user: "done", harness: "active", ollama: "idle", flow: "out" });
 
-  // Open the stream. The server reads ?system= to decide whether the harness
-  // adds its system prompt — so this toggle changes what is really sent.
-  const url = `/api/chat?message=${encodeURIComponent(message)}&system=${useSystemPrompt}`;
+  // The system prompt we send is whatever is in the editable field — or empty
+  // when the toggle is "without". The server prepends it verbatim, so editing
+  // the field really changes what the model is told.
+  const systemPrompt = useSystemPrompt ? $("system-prompt").value : "";
+  const url = `/api/chat?message=${encodeURIComponent(message)}`
+            + `&system_prompt=${encodeURIComponent(systemPrompt)}`;
   const es = new EventSource(url);
   let sawContent = false;
 

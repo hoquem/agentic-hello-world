@@ -91,16 +91,23 @@
       <h2>
         Harness · the deck
         <span class="sp-label">system prompt</span>
-        <!-- Real toggle: flips whether the harness adds its system prompt. -->
-        <span class="toggle" id="toggle" data-on="with" title="Toggle the system prompt on/off">
+        <!-- Toggle: include the system prompt, or send only the user's message. -->
+        <span class="toggle" id="toggle" data-on="with" title="Include the system prompt, or send only the user message">
           <span class="opt with">with</span><span class="opt without">without</span>
         </span>
       </h2>
       <div class="explain">
-        The harness wraps your message in a <b>system prompt</b> before sending.
-        The model is stateless — this standing instruction is how the harness
-        sets its behavior. You never type it.
+        The harness puts a <b>system prompt</b> in front of your message before
+        sending. The model is stateless — this standing instruction is how the
+        harness sets its behavior. <b>Edit it below and resend</b> to watch the
+        model follow whatever you tell it.
       </div>
+      <!-- Editable system prompt: change it and resend to show that the model's
+           behavior comes from this text, not the model. Disabled when "without". -->
+      <label class="sp-edit">
+        <span class="sp-edit-label">system prompt — editable</span>
+        <textarea id="system-prompt" rows="2" spellcheck="false">Reply with exactly what the user typed, and nothing else.</textarea>
+      </label>
       <div id="deck"></div>
       <div class="decision" id="decision"></div>
     </section>

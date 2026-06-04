@@ -35,15 +35,16 @@ async def always_revalidate(request: Request, call_next):
     return response
 
 
-def get_harness(system: bool = True) -> Harness:
+def get_harness(system_prompt: str = DEFAULT_SYSTEM_PROMPT) -> Harness:
     """Build a Harness wired to the local Ollama daemon (which proxies to cloud).
 
     Fails loudly via :func:`verify_daemon` if the daemon is down or the model
     isn't pulled. Overridden in tests with a network-free fake.
 
-    :param system: when true (default), the harness adds its standing system
-        prompt; when false, only the user's message is sent. Driven by the
-        ``?system=`` query param, so the UI's with/without toggle is real.
+    :param system_prompt: the system prompt to put in front of the user's
+        message, taken from the ``?system_prompt=`` query param so the UI's
+        editable field is real. An empty string means "no system prompt", so the
+        model gets only the user's words. Defaults to :data:`DEFAULT_SYSTEM_PROMPT`.
     """
     cfg = load_config()
     client = make_client(cfg.host)
@@ -52,8 +53,7 @@ def get_harness(system: bool = True) -> Harness:
     def chat_fn(request: dict) -> Iterator[dict]:
         return stream_chat(client, request)
 
-    system_prompt = DEFAULT_SYSTEM_PROMPT if system else None
-    return Harness(chat_fn=chat_fn, model=cfg.model, system_prompt=system_prompt)
+    return Harness(chat_fn=chat_fn, model=cfg.model, system_prompt=system_prompt or None)
 
 
 @app.get("/api/chat")
