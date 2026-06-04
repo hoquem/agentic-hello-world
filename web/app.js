@@ -41,6 +41,7 @@ function addCard(role, content) {
 // model reasoning, purple), content tokens (the actual reply, green), or the
 // final "done" marker. The full raw chunk is shown — nothing cleaned up.
 function addChunk(raw) {
+  // We still show the whole raw chunk below; this only picks the colour tag.
   const msg = raw.message || {};
   let tag = "done";
   if (msg.content) tag = "content";
@@ -68,6 +69,7 @@ $("toggle").addEventListener("click", () => {
 $("composer").addEventListener("submit", (e) => {
   e.preventDefault();
   const message = $("message").value;
+  if (!message.trim()) return;  // nothing to send — don't fire an empty request
 
   // Clear every panel so each run starts fresh.
   $("deck").innerHTML = "";
