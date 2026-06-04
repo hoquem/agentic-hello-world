@@ -18,9 +18,9 @@ in the cloud. The app sends no credential of its own — the daemon owns it.
    ollama signin
    ollama pull kimi-k2.6:cloud
    ```
-3. `cp .env.example .env` (defaults already target the local daemon + model)
-4. `set -a && source .env && set +a && make dev`
-5. Open http://localhost:8000
+3. (optional) `cp .env.example .env` — only needed to override the local-daemon defaults
+4. `make dev`
+5. Open http://localhost:8420
 
 If the daemon is down or the model isn't pulled, the app fails loudly on the
 first request (see `verify_daemon`) rather than hiding the misconfiguration.

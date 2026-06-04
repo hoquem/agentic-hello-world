@@ -4,8 +4,10 @@ setup-dev:
 	python3 -m venv $(VENV)
 	$(VENV)/bin/pip install -e ".[dev]"
 
-dev:  # loads .env (OLLAMA_HOST / MODEL overrides); the local daemon holds the cloud signin
-	set -a && . ./.env && set +a && $(VENV)/bin/uvicorn app.server:app --reload --port 8000
+# Serve on :8420 (port 8000 collides with workspace-mcp). .env is optional —
+# config defaults to the local daemon + model; .env just overrides them.
+dev:
+	set -a; [ -f .env ] && . ./.env; set +a; $(VENV)/bin/uvicorn app.server:app --reload --port 8420
 
 test:
 	$(VENV)/bin/pytest -v

@@ -7,7 +7,7 @@ import json
 from collections.abc import Iterator
 from pathlib import Path
 
-from fastapi import Depends, FastAPI, Query
+from fastapi import Depends, FastAPI, Query, Request
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from sse_starlette.sse import EventSourceResponse
@@ -19,6 +19,20 @@ from app.ollama_client import make_client, stream_chat, verify_daemon
 WEB_DIR = Path(__file__).resolve().parent.parent / "web"
 
 app = FastAPI(title="Transparent Agent Harness")
+
+
+@app.middleware("http")
+async def always_revalidate(request: Request, call_next):
+    """Tell the browser to revalidate on every request (``Cache-Control: no-cache``).
+
+    This is a teaching/demo app whose HTML, CSS and JS are edited constantly and
+    shown on screen — caching would make the browser serve a stale UI after an
+    edit. ``no-cache`` means "always check with the server", which still returns
+    a cheap ``304 Not Modified`` when nothing changed.
+    """
+    response = await call_next(request)
+    response.headers["Cache-Control"] = "no-cache"
+    return response
 
 
 def get_harness(system: bool = True) -> Harness:

@@ -100,3 +100,13 @@ def test_favicon_served():
     client = TestClient(server.app)
     resp = client.get("/favicon.ico")
     assert resp.status_code == 200
+
+
+def test_responses_are_not_cached():
+    # The UI is edited constantly; responses must tell the browser to revalidate
+    # so edits to web/ show up on a normal reload.
+    client = TestClient(server.app)
+    for path in ["/", "/static/app.js", "/static/style.css"]:
+        resp = client.get(path)
+        assert resp.status_code == 200
+        assert "no-cache" in resp.headers.get("cache-control", "")
