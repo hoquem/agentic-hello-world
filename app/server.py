@@ -35,25 +35,28 @@ async def always_revalidate(request: Request, call_next):
     return response
 
 
-def get_harness(system_prompt: str = DEFAULT_SYSTEM_PROMPT) -> Harness:
+def get_harness(system_prompt: str = DEFAULT_SYSTEM_PROMPT, model: str = "") -> Harness:
     """Build a Harness wired to the local Ollama daemon (which proxies to cloud).
 
-    Fails loudly via :func:`verify_daemon` if the daemon is down or the model
-    isn't pulled. Overridden in tests with a network-free fake.
+    Fails loudly via :func:`verify_daemon` if the daemon is down or the chosen
+    model isn't pulled. Overridden in tests with a network-free fake.
 
     :param system_prompt: the system prompt to put in front of the user's
         message, taken from the ``?system_prompt=`` query param so the UI's
         editable field is real. An empty string means "no system prompt", so the
         model gets only the user's words. Defaults to :data:`DEFAULT_SYSTEM_PROMPT`.
+    :param model: the model to call, from the ``?model=`` query param so the UI's
+        model picker is real. Empty means "use the configured default".
     """
     cfg = load_config()
+    chosen_model = model or cfg.model
     client = make_client(cfg.host)
-    verify_daemon(client, cfg.model)
+    verify_daemon(client, chosen_model)
 
     def chat_fn(request: dict) -> Iterator[dict]:
         return stream_chat(client, request)
 
-    return Harness(chat_fn=chat_fn, model=cfg.model, system_prompt=system_prompt or None)
+    return Harness(chat_fn=chat_fn, model=chosen_model, system_prompt=system_prompt or None)
 
 
 @app.get("/api/chat")

@@ -16,6 +16,9 @@ body { margin: 0; font-family: ui-monospace, monospace; background: var(--bg); c
        border-bottom: 1px solid var(--line); background: #1a1d23; }
 .bar .title { font-size: .92rem; text-transform: uppercase; letter-spacing: .12em; color: #aeb6c2; font-weight: 600; }
 .bar .by { font-size: .72rem; color: #6f7884; }
+.model-pick { margin-left: 18px; font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; color: #6f7884; display: flex; align-items: center; gap: 6px; }
+.model-pick select { font-family: inherit; font-size: .8rem; text-transform: none; letter-spacing: 0; color: #cfd6df; background: var(--ink); border: 1px solid #333a45; border-radius: 6px; padding: 4px 8px; cursor: pointer; }
+.model-pick select:focus { outline: none; border-color: var(--cloud); }
 .state { margin-left: auto; font-size: .9rem; color: var(--cloud); }
 
 /* ---- pipeline ---- */
@@ -81,6 +84,14 @@ body { margin: 0; font-family: ui-monospace, monospace; background: var(--bg); c
 .popover.info ul { list-style: none; margin: 0 0 10px; padding: 0; }
 .popover.info li { font-size: .9rem; color: #d6deea; line-height: 1.7; }
 .popover.info code { background: #14161a; border: 1px solid #20242c; border-radius: 4px; padding: 1px 5px; font-size: .82rem; color: #9fb3c8; }
+
+/* a floating popover lives in a scrolling panel, so it's positioned with fixed
+   viewport coordinates by app.js (avoids being clipped by the panel's overflow) */
+.popover.floating { position: fixed; top: 0; left: 0; margin: 0; transform: none; max-width: 430px; }
+h3.has-pop { position: relative; }
+.legend { font-size: .82rem; line-height: 1.65; }
+.legend li { margin-bottom: 3px; }
+.legend .sw { font-size: .7rem; vertical-align: 1px; }   /* color swatch dot */
 .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
 .local-dot { background: var(--user); }
 .cloud-dot { background: var(--cloud); }
@@ -148,4 +159,15 @@ pre { background: var(--ink); border: 1px solid #20242c; border-radius: 7px; pad
 .chunk .tag { font-weight: 700; }
 .chunk[data-tag="thinking"] .tag { color: var(--thinking); }
 .chunk[data-tag="content"] .tag { color: var(--assistant); }
-.chunk[data-tag="done"] .tag { color: #6f7884; }
+.chunk[data-tag="done"] .tag { color: var(--system); }
+.chunk[data-tag="step"] .tag { color: #6f7884; }
+
+/* color-coded JSON inside each chunk — the important "learning data" pops */
+.j-key { color: #6f7884; }                       /* field names */
+.j-str { color: #9fb3c8; }                       /* ordinary strings */
+.j-num, .j-bool { color: #c0a36e; }              /* numbers / booleans */
+.j-null { color: #4a5260; }                      /* not set this chunk */
+.j-content  { color: var(--assistant); font-weight: 700; }  /* the reply text */
+.j-thinking { color: var(--thinking); }                     /* the reasoning */
+.j-done     { color: var(--system); font-weight: 700; }     /* done: true */
+.j-stat     { color: var(--cloud); font-weight: 600; }      /* tokens / timings */

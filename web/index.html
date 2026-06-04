@@ -12,6 +12,25 @@
   <header class="bar">
     <span class="title">Transparent Agent Harness</span>
     <span class="by">· running on Ollama</span>
+    <!-- Pick the model the harness calls. Same harness, any model — switch a
+         reasoning model and a plain one to see the difference on the wire.
+         Local models must be pulled first (e.g. `ollama pull llama3.2:1b`). -->
+    <label class="model-pick">model
+      <select id="model">
+        <optgroup label="Local · no reasoning">
+          <option value="llama3.2:1b">llama3.2:1b</option>
+          <option value="gemma3:1b">gemma3:1b</option>
+        </optgroup>
+        <optgroup label="Local · reasoning">
+          <option value="deepseek-r1:1.5b">deepseek-r1:1.5b</option>
+          <option value="qwen3:1.7b">qwen3:1.7b</option>
+        </optgroup>
+        <optgroup label="Cloud">
+          <option value="kimi-k2.6:cloud" selected>kimi-k2.6:cloud</option>
+          <option value="glm-5.1:cloud">glm-5.1:cloud</option>
+        </optgroup>
+      </select>
+    </label>
     <span class="state" id="state">ready</span>
   </header>
 
@@ -116,7 +135,25 @@
       <h2>LLM · the wire</h2>
       <h3>▸ SENT to Ollama</h3>
       <pre id="sent"></pre>
-      <h3>◂ RECEIVED <span class="muted">(raw chunks)</span></h3>
+      <h3 class="has-pop" id="received-head">◂ RECEIVED <span class="muted">(raw chunks)</span> <span class="hint">fields ⓘ</span>
+        <!-- Hover legend: plain-English meaning of each field on the wire.
+             Colors here match the colored values in the chunks below. -->
+        <div class="popover info floating">
+          <div class="pop-h">What's in each chunk?</div>
+          <p>Each line is one streamed <b>chunk</b> — a small piece of the reply, exactly as Ollama sent it.</p>
+          <ul class="legend">
+            <li><code>model</code> — which model answered (<code>:cloud</code> = run in the cloud)</li>
+            <li><code>done</code> — <span class="j-num">false</span> while streaming; <span class="j-done">true</span> on the final summary chunk</li>
+            <li><code>done_reason</code> — why it stopped (<span class="j-stat">"stop"</span> = finished normally)</li>
+            <li><code>message.content</code> <span class="sw j-content">●</span> — the visible reply text in this chunk</li>
+            <li><code>message.thinking</code> <span class="sw j-thinking">●</span> — the model's reasoning (reasoning models only)</li>
+            <li><code>message.tool_calls</code> — tools the model wants to run (a later episode)</li>
+            <li><code>prompt_eval_count</code> / <code>eval_count</code> <span class="sw j-stat">●</span> — tokens in / tokens out</li>
+            <li><code>total_duration</code> <span class="sw j-stat">●</span> — total time, in nanoseconds (1e9 = 1s)</li>
+            <li><span class="j-null">null</span> — not set for this chunk (timings only appear on the last one)</li>
+          </ul>
+        </div>
+      </h3>
       <div id="received"></div>
     </section>
   </main>

@@ -37,25 +37,51 @@ function addCard(role, content) {
   $("deck").appendChild(card);
 }
 
-// Show one raw received chunk, tagged by what it carries: thinking tokens (the
-// model reasoning, purple), content tokens (the actual reply, green), or the
-// final "done" marker. The full raw chunk is shown — nothing cleaned up.
+// Escape text before putting it in HTML (model output is untrusted).
+const esc = (s) =>
+  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+// Usage/timing stats — highlighted teal so the "learning data" stands out.
+const STAT_KEYS = new Set([
+  "eval_count", "prompt_eval_count", "total_duration",
+  "load_duration", "eval_duration", "prompt_eval_duration", "done_reason",
+]);
+
+// Turn one chunk into color-coded JSON. The whole chunk is shown verbatim
+// (nothing hidden); colors just make the important fields easy to spot:
+// content = green, thinking = purple, done:true = amber, usage stats = teal.
+function colorize(key, value) {
+  if (value === null) return '<span class="j-null">null</span>';
+  if (Array.isArray(value))
+    return "[" + value.map((v) => colorize(null, v)).join(", ") + "]";
+  if (typeof value === "object")
+    return "{" + Object.entries(value)
+      .map(([k, v]) => `<span class="j-key">"${esc(k)}"</span>: ${colorize(k, v)}`)
+      .join(", ") + "}";
+  if (typeof value === "string") {
+    const cls = key === "content" && value ? "j-content"
+              : key === "thinking" && value ? "j-thinking" : "j-str";
+    return `<span class="${cls}">"${esc(value)}"</span>`;
+  }
+  if (typeof value === "boolean")
+    return `<span class="${key === "done" && value ? "j-done" : "j-num"}">${value}</span>`;
+  return `<span class="${STAT_KEYS.has(key) ? "j-stat" : "j-num"}">${value}</span>`;
+}
+
+// Show one received chunk: a colored tag for what it carries, then the full
+// color-coded chunk. "done" is the final summary chunk; an empty in-between
+// chunk (no text, not done) is a "step".
 function addChunk(raw) {
-  // We still show the whole raw chunk below; this only picks the colour tag.
   const msg = raw.message || {};
-  let tag = "done";
-  if (msg.content) tag = "content";
+  let tag = "step";
+  if (raw.done) tag = "done";
+  else if (msg.content) tag = "content";
   else if (msg.thinking) tag = "thinking";
 
   const line = document.createElement("div");
   line.className = "chunk";
   line.dataset.tag = tag;
-  const label = document.createElement("span");
-  label.className = "tag";
-  label.textContent = tag + ": ";
-  const body = document.createElement("span");
-  body.textContent = JSON.stringify(raw);
-  line.append(label, body);
+  line.innerHTML = `<span class="tag">${tag}: </span>${colorize(null, raw)}`;
   $("received").appendChild(line);
 }
 
@@ -67,17 +93,27 @@ $("toggle").addEventListener("click", () => {
   $("system-prompt").disabled = !useSystemPrompt;
 });
 
-// Hover popovers on the pipeline nodes. We open on hover and keep the popover
-// open while the cursor is over EITHER the node or the popover, with a short
-// grace delay before closing — so you can move the mouse onto the popover to
-// point at or select the code (e.g. while talking through it on camera).
-document.querySelectorAll(".node.has-pop").forEach((node) => {
-  const popover = node.querySelector(".popover");
+// Hover popovers (pipeline nodes + the RECEIVED field legend). We open on hover
+// and keep the popover open while the cursor is over EITHER the host or the
+// popover, with a short grace delay — so you can move onto it to point at or
+// select the content while talking through it on camera.
+// A ".floating" popover lives inside a scrolling panel, so we position it with
+// fixed coordinates (relative to the host) to avoid being clipped.
+document.querySelectorAll(".has-pop").forEach((host) => {
+  const popover = host.querySelector(".popover");
   let closeTimer;
-  const open = () => { clearTimeout(closeTimer); popover.classList.add("open"); };
+  const open = () => {
+    clearTimeout(closeTimer);
+    if (popover.classList.contains("floating")) {
+      const r = host.getBoundingClientRect();
+      popover.style.top = `${r.bottom + 8}px`;
+      popover.style.left = `${Math.max(8, Math.min(r.left, window.innerWidth - 440))}px`;
+    }
+    popover.classList.add("open");
+  };
   const closeSoon = () => { closeTimer = setTimeout(() => popover.classList.remove("open"), 300); };
-  node.addEventListener("mouseenter", open);
-  node.addEventListener("mouseleave", closeSoon);
+  host.addEventListener("mouseenter", open);
+  host.addEventListener("mouseleave", closeSoon);
   popover.addEventListener("mouseenter", open);   // moving onto the popover keeps it open
   popover.addEventListener("mouseleave", closeSoon);
 });
@@ -103,7 +139,8 @@ $("composer").addEventListener("submit", (e) => {
   // the field really changes what the model is told.
   const systemPrompt = useSystemPrompt ? $("system-prompt").value : "";
   const url = `/api/chat?message=${encodeURIComponent(message)}`
-            + `&system_prompt=${encodeURIComponent(systemPrompt)}`;
+            + `&system_prompt=${encodeURIComponent(systemPrompt)}`
+            + `&model=${encodeURIComponent($("model").value)}`;
   const es = new EventSource(url);
   let sawContent = false;
 

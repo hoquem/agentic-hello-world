@@ -18,10 +18,21 @@ def make_fake_harness() -> Harness:
     return Harness(chat_fn=fake_chat_fn, model="gpt-oss:120b")
 
 
-def fake_get_harness(system_prompt: str = "DEFAULT") -> Harness:
+def fake_get_harness(system_prompt: str = "DEFAULT", model: str = "m") -> Harness:
     # Mirrors the real get_harness mapping, but network-free: the `system_prompt`
-    # query param is the actual prompt text; empty string means "no system prompt".
-    return Harness(chat_fn=fake_chat_fn, model="m", system_prompt=system_prompt or None)
+    # query param is the actual prompt text (empty = no system prompt), and the
+    # `model` query param selects the model.
+    return Harness(chat_fn=fake_chat_fn, model=model, system_prompt=system_prompt or None)
+
+
+def _sent_request(body: str) -> dict:
+    """Pull the full `sent` event request out of an SSE response body."""
+    for line in body.splitlines():
+        if line.startswith("data:"):
+            payload = json.loads(line[len("data:"):].strip())
+            if payload["type"] == "sent":
+                return payload["request"]
+    raise AssertionError("no 'sent' event found in stream")
 
 
 def _sent_messages(body: str) -> list[dict]:
@@ -86,6 +97,20 @@ def test_empty_system_prompt_omits_system_message():
 
     roles = [m["role"] for m in _sent_messages(body)]
     assert roles == ["user"]
+
+
+def test_model_param_selects_the_model():
+    server.app.dependency_overrides[server.get_harness] = fake_get_harness
+    try:
+        client = TestClient(server.app)
+        with client.stream(
+            "GET", "/api/chat", params={"message": "hi", "model": "deepseek-r1:1.5b"}
+        ) as resp:
+            body = "".join(resp.iter_text())
+    finally:
+        server.app.dependency_overrides.clear()
+
+    assert _sent_request(body)["model"] == "deepseek-r1:1.5b"
 
 
 def test_root_and_index_serve_html():
