@@ -5,24 +5,25 @@
 Output production/vhs/llm-funfact-x3.mp4
 
 Set Shell "bash"
-Set FontSize 26
+Set FontSize 28
 Set Width 900
 Set Height 720
 Set Padding 40
 Set Theme "Catppuccin Mocha"
 Set TypingSpeed 45ms
 
+# Hidden setup so the on-screen command stays clean: `python fun_fact.py`
 Hide
-Type "clear"
+Type "cd production/code && source ../../venv/bin/activate && clear"
 Enter
 Show
 
-Type "venv/bin/python production/code/fun_fact.py"
+Type "python fun_fact.py"
 Enter
-Sleep 5s
-Type "venv/bin/python production/code/fun_fact.py"
+Sleep 8s
+Type "python fun_fact.py"
 Enter
-Sleep 5s
-Type "venv/bin/python production/code/fun_fact.py"
+Sleep 8s
+Type "python fun_fact.py"
 Enter
-Sleep 5s
+Sleep 8s

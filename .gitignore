@@ -22,3 +22,4 @@ production/app-demo/*.mp4
 node_modules/
 package.json
 package-lock.json
+production/roughcut.mp4

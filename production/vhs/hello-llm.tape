@@ -11,13 +11,13 @@ Set Padding 50
 Set Theme "Catppuccin Mocha"
 Set TypingSpeed 50ms
 
+# Hidden setup so the on-screen command stays clean: `python hello_llm.py`
 Hide
-Type "clear"
+Type "cd production/code && source ../../venv/bin/activate && clear"
 Enter
 Show
 
-# (Optional: cut to the file on screen in the editor before this run.)
-Type "venv/bin/python production/code/hello_llm.py"
+Type "python hello_llm.py"
 Sleep 600ms
 Enter
-Sleep 4s
+Sleep 9s
