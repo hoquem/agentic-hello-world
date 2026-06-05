@@ -5,9 +5,9 @@
 Output production/vhs/llm-funfact-x3.mp4
 
 Set Shell "bash"
-Set FontSize 28
-Set Width 900
-Set Height 720
+Set FontSize 34
+Set Width 1920
+Set Height 1080
 Set Padding 40
 Set Theme "Catppuccin Mocha"
 Set TypingSpeed 45ms
@@ -20,10 +20,10 @@ Show
 
 Type "python fun_fact.py"
 Enter
-Sleep 8s
+Sleep 3s
 Type "python fun_fact.py"
 Enter
-Sleep 8s
+Sleep 3s
 Type "python fun_fact.py"
 Enter
-Sleep 8s
+Sleep 3s

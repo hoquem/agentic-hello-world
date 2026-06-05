@@ -41,7 +41,7 @@
 
 ### TAKE 9 — The lesson
 > So: the old Hello World was code — deterministic, the same every time. // The new one is a prompt to a model, and its behaviour depends on the model, the input, and chance. // We stopped writing the output. Now we shape the conditions and ask. `[beat]`
-> And the model never changed — everything we did lived in the harness. // That's the whole series in one line.
+> And notice — we never reached *inside* the model. // We swapped it, fed it, wrapped it — all from the harness. // The models are interchangeable parts; the harness is the thing you write. // That's the whole series in one line.
 
 ### TAKE 10 — Tease + CTA
 > One thing we kept doing: jamming our instruction into every message — "reply with exactly." // It works, but it's fragile, and you repeat it forever. // There's a better way to give a model a standing job: the system prompt. // That's next episode — and it's where this stops being a toy. `[beat]`

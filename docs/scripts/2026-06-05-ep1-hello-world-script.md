@@ -7,7 +7,7 @@
 
 **Through-line:** *make the model say exactly "Hello World!"* — and discover that getting predictable behaviour out of an LLM is a different game than writing code.
 
-**v3 tightenings applied:** cold-tease the payoff up front · merged reveal+reframe · compressed harness walkthrough to its punch · thinned VO with deliberate silence beats · the two non-determinism causes are explicitly named (randomness / which model). Locked: open prompt = "Give me a fun fact."; print-vs-LLM shown **side-by-side**.
+**v3 tightenings applied:** cold-tease the payoff up front · merged reveal+reframe · compressed harness walkthrough to its punch · thinned VO with deliberate silence beats · the two non-determinism causes are explicitly named (randomness / which model). Locked: open prompt = "Give me a one-sentence fun fact."; print-vs-LLM shown **side-by-side**.
 
 **Tracks:** **VO** (voiceover) · **SCREEN** (on screen / app cues). `[beat]` = hold ~1s, no VO, let the screen land. Timecodes approximate.
 
@@ -26,7 +26,7 @@
 
 ## 0:10–0:16 — COLD TEASE (show the destination)
 
-**SCREEN:** Quick flash — the same LLM prompt ("Give me a fun fact.") run twice, side by side → **two different answers.** Caption punches in: **…but not with an LLM.**
+**SCREEN:** Quick flash — the same LLM prompt ("Give me a one-sentence fun fact.") run twice, side by side → **two different answers.** Caption punches in: **…but not with an LLM.**
 
 **VO:** "Unless you ask an LLM. Then 'the same program' can give you *this*… or *this*."
 
@@ -69,7 +69,7 @@ Run → `Hello World!` `[beat]`
 
 **VO:** "A fixed instruction behaves. But just *ask* it something —"
 
-**SCREEN:** Change the message to `"Give me a fun fact."`. **Side-by-side:** left, `print("Hello, World!")` run 3× → identical; right, the LLM run 3× → three different facts.
+**SCREEN:** Change the message to `"Give me a one-sentence fun fact."`. **Side-by-side:** left, `print("Hello, World!")` run 3× → identical; right, the LLM run 3× → three different facts.
 
 `[beat]`
 
@@ -99,7 +99,7 @@ Run → `Hello World!` `[beat]`
 
 **VO:** "And the model behind it is *stateless*. Text in, text out — no memory, no hands, no eyes. Everything an agent ever does, for this whole series, lives in *this* code. Not the model."
 
-**SCREEN:** Caption: **the model never changes. the harness does.**
+**SCREEN:** Caption: **you don't reprogram the model — you wrap it.**
 
 ---
 
@@ -129,7 +129,7 @@ Run → `Hello World!` `[beat]`
 
 **SCREEN:** Caption: **We don't write the output anymore. We shape the conditions.**
 
-**VO:** "And the model never changed — everything we did lived in the harness. That's the whole series in one line."
+**VO:** "And notice — we never reached *inside* the model. We swapped it, we fed it, we wrapped it — all from the harness. The models are interchangeable parts; the harness is the thing you write. That's the whole series in one line."
 
 ---
 
@@ -153,6 +153,6 @@ Run → `Hello World!` `[beat]`
 ## Locked decisions
 - System prompt → **Ep2** (Ep1 app runs with it OFF; instruction in the user message).
 - Through-line: "make the model say exactly Hello World!"
-- Non-determinism shown as **two named causes**: randomness (same-model re-runs of "Give me a fun fact.") + which model (in-app picker).
+- Non-determinism shown as **two named causes**: randomness (same-model re-runs of "Give me a one-sentence fun fact.") + which model (in-app picker).
 - print-vs-LLM = **side-by-side**.
 - Target ~6:30–7 min (tightened from 8; expand the model beat if you want to land back at 8).

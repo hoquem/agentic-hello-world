@@ -3,9 +3,9 @@
 Output production/vhs/montage.mp4
 
 Set Shell "bash"
-Set FontSize 32
-Set Width 1280
-Set Height 720
+Set FontSize 36
+Set Width 1920
+Set Height 1080
 Set Padding 50
 Set Theme "Catppuccin Mocha"
 Set TypingSpeed 55ms

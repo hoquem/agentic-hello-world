@@ -18,7 +18,7 @@
 import { chromium } from "playwright";
 
 const BASE = process.env.APP_URL || "http://localhost:8420";
-const VIEWPORT = { width: 1600, height: 900 };
+const VIEWPORT = { width: 1920, height: 1080 };
 const HELLO = "Reply with exactly: Hello World!";
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
