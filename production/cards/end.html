@@ -1,0 +1,25 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+  :root{--bg:#14161a;--fg:#e8e8e8;--user:#4a90e2;--assistant:#3fae5a;--system:#f5a623;--cloud:#4ec9b0;--muted:#6f7884;--line:#2a2e37}
+  *{margin:0;box-sizing:border-box}
+  html,body{width:1920px;height:1080px;overflow:hidden}
+  body{background:radial-gradient(1300px 760px at 38% 40%, #1b212b, var(--bg));
+       color:var(--fg);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+       padding:120px 130px;display:flex;flex-direction:column;justify-content:center;gap:46px}
+  .kicker{font-size:26px;letter-spacing:.32em;text-transform:uppercase;color:var(--muted)}
+  .next{font-size:34px;color:#aeb6c2}
+  .ep{font-size:104px;font-weight:700;line-height:1.04}
+  .ep .accent{color:var(--system)}
+  .row{display:flex;align-items:center;gap:18px;font-size:34px;color:#cfd6df;margin-top:10px}
+  .pill{font-size:30px;background:#1d2026;border:1px solid var(--line);border-radius:999px;padding:10px 22px;color:#aeb6c2}
+  .repo{position:absolute;bottom:80px;font-size:30px;color:var(--cloud)}
+  /* right third is intentionally clear for YouTube's end-screen elements */
+  .clearzone{position:absolute;right:0;top:0;width:620px;height:1080px}
+</style></head><body>
+  <div class="kicker">Building an AI Agent from Zero</div>
+  <div class="next">Next episode</div>
+  <div class="ep">Episode 2<br><span class="accent">The System Prompt</span></div>
+  <div class="row"><span class="pill">&#9655; Subscribe</span><span>new episode every week</span></div>
+  <div class="repo">github.com/hoquem/agentic-hello-world</div>
+  <div class="clearzone"></div>
+</body></html>
