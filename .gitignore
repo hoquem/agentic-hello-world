@@ -13,3 +13,12 @@ __pycache__/
 
 # Playwright verification artifacts
 .playwright-mcp/
+
+# Production: generated media + node deps (keep tapes/scripts/code tracked)
+production/vhs/*.mp4
+production/vhs/*.gif
+production/app-demo/footage/
+production/app-demo/*.mp4
+node_modules/
+package.json
+package-lock.json

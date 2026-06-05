@@ -1,0 +1,12 @@
+# Paste into the YouTube description (timestamps must start at 0:00).
+# RE-TIME these after your final cut — they follow the script's target timing (~6:30).
+
+0:00 Every program's first words: Hello, World
+0:16 ...but with an LLM?
+0:28 Hello World in plain Python
+1:10 Same code, different answer (it's not deterministic)
+1:55 A transparent agent harness
+2:45 The entire harness — this much code
+3:25 Same prompt, different model
+5:00 The lesson: we shape conditions, not output
+5:45 Next: the system prompt
