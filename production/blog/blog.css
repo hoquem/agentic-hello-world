@@ -1,0 +1,161 @@
+/* ------------------------------------------------------------------ *
+ * Shared styling for the blog diagrams.
+ *
+ * Same visual language as the videos and the app: dark background,
+ * monospace type, and the SACRED role colors (system=amber, user=blue,
+ * assistant=green, tool=purple). Each diagram is its own HTML file that
+ * links this stylesheet; render-blog.mjs screenshots them to PNG.
+ * ------------------------------------------------------------------ */
+
+:root {
+  --system:    #f5a623;  /* amber  — standing orders / job description   */
+  --user:      #4a90e2;  /* blue   — the request                        */
+  --assistant: #3fae5a;  /* green  — the model's reply                  */
+  --tool:      #b07cd6;  /* purple — a result handed back to the model  */
+  --cloud:     #4ec9b0;  /* teal   — the model / the wire               */
+
+  --bg:    #14161a;
+  --fg:    #e8e8e8;
+  --panel: #1d2026;
+  --line:  #2a2e37;
+  --ink:   #0d0f12;
+  --muted: #6f7884;
+}
+
+* { margin: 0; box-sizing: border-box; }
+
+body {
+  background: radial-gradient(1300px 820px at 50% 40%, #1b212b, var(--bg));
+  color: var(--fg);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* The fixed-size canvas each diagram draws on. render-blog.mjs sets the
+   viewport to match --w / --h declared per file. min-height:100vh makes the
+   stage fill the canvas so content centers properly; the generous bottom
+   padding reserves a band for the absolute footer so they never collide. */
+.stage {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 34px;
+  padding: 70px 64px 130px;
+}
+
+/* ---- shared headings ---- */
+.kicker {
+  font-size: 22px;
+  letter-spacing: .32em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.headline { font-size: 52px; font-weight: 700; line-height: 1.08; text-align: center; }
+.headline .accent { color: var(--cloud); }
+.sub { font-size: 26px; color: #aeb6c2; text-align: center; max-width: 1100px; line-height: 1.4; }
+.foot {
+  position: absolute; bottom: 42px; font-size: 20px; color: var(--muted);
+  letter-spacing: .04em;
+}
+
+/* ---- role-colored card (the deck's building block) ---- */
+.card {
+  background: var(--panel);
+  border-left: 8px solid var(--line);
+  border-radius: 12px;
+  padding: 22px 26px;
+  min-width: 320px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, .35);
+}
+.card .role {
+  font-size: 18px; letter-spacing: .18em; text-transform: uppercase;
+  margin-bottom: 8px; font-weight: 700;
+}
+.card .body { font-size: 26px; color: var(--fg); }
+.card .note { font-size: 19px; color: var(--muted); margin-top: 10px; }
+
+.card.system    { border-left-color: var(--system); }
+.card.system    .role { color: var(--system); }
+.card.user      { border-left-color: var(--user); }
+.card.user      .role { color: var(--user); }
+.card.assistant { border-left-color: var(--assistant); }
+.card.assistant .role { color: var(--assistant); }
+.card.tool      { border-left-color: var(--tool); }
+.card.tool      .role { color: var(--tool); }
+
+/* ---- the three actors ---- */
+.actor {
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+  width: 340px; text-align: center;
+}
+.actor .glyph {
+  width: 150px; height: 150px; border-radius: 24px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 76px; background: var(--panel); border: 2px solid var(--line);
+}
+.actor .name { font-size: 30px; font-weight: 700; letter-spacing: .04em; }
+.actor .desc { font-size: 21px; color: var(--muted); line-height: 1.35; }
+
+/* HARNESS — the protagonist, the only part that changes. It glows. */
+.actor.harness .glyph {
+  border-color: var(--cloud);
+  box-shadow: 0 0 0 4px rgba(78, 201, 176, .14), 0 0 60px rgba(78, 201, 176, .28);
+}
+.actor.harness .name { color: var(--cloud); }
+
+/* LLM — a sealed black box. Frozen on the build axis: you never retrain it. */
+.box.llm {
+  position: relative;
+  width: 360px; min-height: 200px;
+  border-radius: 20px;
+  background: linear-gradient(160deg, #0c0e12, #05070a);
+  border: 2px solid #2f3845;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; padding: 30px;
+  box-shadow: inset 0 0 60px rgba(0, 0, 0, .6);
+}
+.box.llm .glyph { font-size: 60px; }
+.box.llm .name  { font-size: 34px; font-weight: 700; letter-spacing: .14em; }
+.box.llm .tag   { font-size: 19px; color: var(--muted); }
+
+/* a "stamped on" label, rotated like an ink stamp */
+.stamp {
+  font-size: 18px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  color: #d65a5a; border: 3px solid #d65a5a; border-radius: 8px;
+  padding: 5px 12px; transform: rotate(-7deg); opacity: .92;
+}
+.stamps { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+
+/* ---- arrows between things ---- */
+.flow-row { display: flex; align-items: center; gap: 30px; justify-content: center; }
+.arrow {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  color: var(--muted); font-size: 18px; min-width: 120px;
+}
+.arrow .line { font-size: 40px; line-height: 1; }
+.arrow.out .line { color: var(--user); }
+.arrow.back .line { color: var(--cloud); }
+
+/* ---- the deck: a stack of cards ---- */
+.deck {
+  display: flex; flex-direction: column; gap: 12px;
+  padding: 18px; border-radius: 16px; border: 1px dashed var(--line);
+  background: rgba(255, 255, 255, .015);
+}
+.deck .mini {
+  border-left: 7px solid var(--line); border-radius: 8px;
+  background: var(--panel); padding: 12px 18px; font-size: 21px; min-width: 300px;
+}
+.mini.system    { border-left-color: var(--system); }
+.mini.user      { border-left-color: var(--user); }
+.mini.assistant { border-left-color: var(--assistant); }
+.mini.tool      { border-left-color: var(--tool); }
+.mini .r { font-size: 14px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }

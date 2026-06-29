@@ -1,0 +1,49 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="blog.css">
+<style>
+  html,body{width:1200px;height:675px}
+  .stage{gap:22px;padding:40px 50px 70px}
+  .headline{font-size:40px}
+  .row{display:flex;align-items:center;gap:34px;margin-top:8px}
+  .arrow .line{color:var(--user);animation:nudge 3s ease-in-out infinite}
+  .deck{transition:none;animation:nudge 3s ease-in-out infinite}
+  .mini{font-size:19px;min-width:280px}
+  /* the two later cards fade in at the half-loop (deck grows), then reset cleanly */
+  .grow{opacity:0;animation:grow 6s ease-in-out infinite}
+  .box.llm{width:150px;min-height:130px;padding:14px;animation:pulse 3s ease-in-out infinite}
+  .box.llm .name{font-size:26px}
+
+  @keyframes nudge{
+    0%,12%{transform:translateX(0)} 22%{transform:translateX(22px)} 34%,62%{transform:translateX(0)}
+    72%{transform:translateX(22px)} 84%,100%{transform:translateX(0)}
+  }
+  @keyframes pulse{
+    0%,12%{box-shadow:inset 0 0 60px rgba(0,0,0,.6)}
+    24%{box-shadow:inset 0 0 60px rgba(0,0,0,.6),0 0 60px rgba(78,201,176,.55)}
+    40%,100%{box-shadow:inset 0 0 60px rgba(0,0,0,.6)}
+  }
+  @keyframes grow{
+    0%,45%{opacity:0;transform:translateY(-8px)}
+    52%,92%{opacity:1;transform:translateY(0)}
+    100%{opacity:0;transform:translateY(-8px)}
+  }
+</style></head>
+<body>
+  <div class="stage">
+    <div class="kicker">The one move that scales</div>
+    <div class="headline">Every call ships the <span class="accent">whole deck</span>.</div>
+
+    <div class="row">
+      <div class="deck">
+        <div class="mini system"><span class="r">system</span><br>be a helpful assistant</div>
+        <div class="mini user"><span class="r">user</span><br>Hello World!</div>
+        <div class="mini assistant grow"><span class="r">assistant</span><br>Hello World!</div>
+        <div class="mini user grow"><span class="r">user</span><br>now in French</div>
+      </div>
+      <div class="arrow"><div class="line">▶</div><div style="color:var(--muted);font-size:17px">send</div></div>
+      <div class="box llm"><div class="name">LLM</div></div>
+    </div>
+
+    <div class="foot">"Memory" is just a taller deck · github.com/hoquem/agentic-hello-world</div>
+  </div>
+</body></html>

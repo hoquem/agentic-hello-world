@@ -1,0 +1,47 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="blog.css">
+<style>
+  html,body{width:1600px;height:900px}
+  .turns{display:flex;gap:70px;align-items:flex-end;justify-content:center}
+  .turn{display:flex;flex-direction:column;align-items:center;gap:16px}
+  .turn .lbl{font-size:22px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+  .ship{display:flex;align-items:center;gap:18px}
+  .ship .arrow .line{color:var(--user)}
+</style></head>
+<body>
+  <div class="stage">
+    <div class="kicker">The one move that scales</div>
+    <div class="headline">Every call ships the <span class="accent">whole deck</span>.</div>
+    <div class="sub">The model remembers nothing, so the harness re-sends the entire conversation every single turn. The deck only ever grows.</div>
+
+    <div class="turns" style="margin-top:20px">
+      <div class="turn">
+        <div class="lbl">Turn 1</div>
+        <div class="ship">
+          <div class="deck">
+            <div class="mini system"><span class="r">system</span><br>be a helpful assistant</div>
+            <div class="mini user"><span class="r">user</span><br>Hello World!</div>
+          </div>
+          <div class="arrow out"><div class="line">▶</div><div>send</div></div>
+          <div class="box llm" style="width:140px;min-height:120px;padding:14px"><div class="name" style="font-size:24px">LLM</div></div>
+        </div>
+      </div>
+
+      <div class="turn">
+        <div class="lbl">Turn 2</div>
+        <div class="ship">
+          <div class="deck">
+            <div class="mini system"><span class="r">system</span><br>be a helpful assistant</div>
+            <div class="mini user"><span class="r">user</span><br>Hello World!</div>
+            <div class="mini assistant"><span class="r">assistant</span><br>Hello World!</div>
+            <div class="mini user"><span class="r">user</span><br>now in French</div>
+          </div>
+          <div class="arrow out"><div class="line">▶</div><div>send <b>all of it</b></div></div>
+          <div class="box llm" style="width:140px;min-height:120px;padding:14px"><div class="name" style="font-size:24px">LLM</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="foot">"Memory" is just a taller deck · github.com/hoquem/agentic-hello-world</div>
+  </div>
+</body></html>

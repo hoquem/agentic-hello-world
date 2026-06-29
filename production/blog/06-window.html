@@ -1,0 +1,44 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="blog.css">
+<style>
+  html,body{width:1600px;height:900px}
+  .frame{position:relative;width:560px;height:340px;border:3px solid var(--cloud);
+         border-radius:18px;padding:22px;display:flex;flex-direction:column-reverse;
+         gap:12px;overflow:hidden;background:rgba(78,201,176,.04)}
+  .frame .cap{position:absolute;top:-16px;left:24px;background:var(--bg);padding:0 12px;
+         font-size:18px;letter-spacing:.12em;text-transform:uppercase;color:var(--cloud)}
+  .fade{position:absolute;top:0;left:0;right:0;height:120px;
+        background:linear-gradient(var(--bg),transparent);pointer-events:none}
+  .spill{opacity:.28}
+  .spill .r{color:var(--muted)}
+  .side{max-width:420px}
+  .side h3{font-size:30px;margin-bottom:14px}
+  .side p{font-size:22px;color:#aeb6c2;line-height:1.5}
+</style></head>
+<body>
+  <div class="stage">
+    <div class="kicker">Why agents forget</div>
+    <div class="headline">The deck must fit the <span class="accent">context window</span>.</div>
+
+    <div class="flow-row" style="gap:70px;margin-top:14px;align-items:center">
+      <div class="frame">
+        <span class="cap">context window · fixed size</span>
+        <div class="mini user"><span class="r">user</span><br>and now make it rhyme</div>
+        <div class="mini assistant"><span class="r">assistant</span><br>Bonjour le monde!</div>
+        <div class="mini user"><span class="r">user</span><br>now in French</div>
+        <div class="mini assistant"><span class="r">assistant</span><br>Hello World!</div>
+        <div class="mini user spill"><span class="r">user</span><br>Hello World!</div>
+        <div class="mini system spill"><span class="r">system</span><br>be a helpful assistant</div>
+        <div class="fade"></div>
+      </div>
+
+      <div class="side">
+        <h3>The frame doesn't grow.</h3>
+        <p>The deck keeps getting taller — but the window is a fixed size. When the deck overflows, the <b>oldest cards fall out of the top</b>.</p>
+        <p style="margin-top:16px">The model didn't "forget." The harness simply stopped sending those cards.</p>
+      </div>
+    </div>
+
+    <div class="foot">Building an AI Agent from Zero · github.com/hoquem/agentic-hello-world</div>
+  </div>
+</body></html>
