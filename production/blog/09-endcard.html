@@ -1,0 +1,32 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="blog.css">
+<style>
+  html,body{width:1600px;height:900px}
+  .stage{gap:30px}
+  .kicker{font-size:24px}
+  .big{font-size:74px;font-weight:700;line-height:1.1;text-align:center}
+  .big .accent{color:var(--cloud)}
+  .sub{font-size:28px}
+  .cta{display:inline-flex;align-items:center;gap:12px;margin-top:8px;
+       font-size:30px;font-weight:700;color:var(--fg);
+       border:2px solid var(--cloud);border-radius:14px;padding:14px 28px}
+  .cta .play{color:var(--cloud)}
+  .dots{display:flex;gap:18px;margin-top:6px}
+  .dot{width:18px;height:18px;border-radius:50%}
+</style></head>
+<body>
+  <div class="stage">
+    <div class="kicker">Building an AI Agent from Zero</div>
+    <div class="big">An agent is an LLM<br>wrapped in a <span class="accent">harness</span>.</div>
+    <div class="sub" style="max-width:1200px">The series builds it one rung at a time, all in the harness.<br>The model never changes.</div>
+    <div class="cta"><span class="play">▷</span> Follow for the next part</div>
+    <div class="dots">
+      <span class="dot" style="background:var(--system)"></span>
+      <span class="dot" style="background:var(--user)"></span>
+      <span class="dot" style="background:var(--assistant)"></span>
+      <span class="dot" style="background:var(--tool)"></span>
+      <span class="dot" style="background:var(--cloud)"></span>
+    </div>
+    <div class="foot">github.com/hoquem/agentic-hello-world</div>
+  </div>
+</body></html>

@@ -24,3 +24,6 @@ package.json
 package-lock.json
 production/roughcut.mp4
 production/cards/*.png
+
+# generated locally (machine-specific file:// image paths)
+production/blog/medium-preview.html

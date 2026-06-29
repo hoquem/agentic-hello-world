@@ -16,6 +16,7 @@ const diagrams = [
   { file: "06-window.html",       out: "06-window.png",       w: 1600, h: 900 },
   { file: "07-ladder.html",       out: "07-ladder.png",       w: 1500, h: 1500 },
   { file: "08-takeaway.html",     out: "08-takeaway.png",     w: 1600, h: 760 },
+  { file: "09-endcard.html",      out: "end-card-medium.png", w: 1600, h: 900 },
 ];
 
 const browser = await chromium.launch();
